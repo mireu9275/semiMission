@@ -4,17 +4,18 @@ plugins {
 }
 
 group = "kr.eme.semiMission"   // ✅ groupId
-version = "1.0.0"              // ✅ 버전 고정 (SNAPSHOT 대신)
+version = "1.0.1"              // ✅ 버전 고정 (SNAPSHOT 대신)
 
 repositories {
     mavenLocal()
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven(url="https://jitpack.io")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
-    compileOnly("kr.eme.semiMoneyGlobal:SemiMoneyGlobal:1.0-SNAPSHOT")
+    compileOnly("com.github.mireu9275:SemiMoneyGlobal:v1.0.1")
 }
 
 kotlin {
