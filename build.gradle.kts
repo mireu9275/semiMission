@@ -1,9 +1,10 @@
 plugins {
     kotlin("jvm") version "2.2.0"
+    `maven-publish`
 }
 
-group = "kr.eme.semiMission"
-version = "1.0-SNAPSHOT"
+group = "kr.eme.semiMission"   // ✅ groupId
+version = "1.0.0"              // ✅ 버전 고정 (SNAPSHOT 대신)
 
 repositories {
     mavenLocal()
@@ -29,5 +30,19 @@ tasks.jar {
     destinationDirectory = file("C:\\Users\\Home\\Desktop\\Develop\\minecraft\\Bukkit\\paper 1.21.4 (Semicolon Primary Colony)\\plugins")
     manifest {
         attributes["Main-Class" ] = "kr.eme.semiMission.SemiMission"
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+            groupId = project.group.toString()      // ✅ group = "kr.eme.semiMission"
+            artifactId = "SemiMission"              // ✅ artifactId
+            version = project.version.toString()    // ✅ version = "1.0.0"
+        }
+    }
+    repositories {
+        mavenLocal() // ✅ publishToMavenLocal 실행 시 ~/.m2/repository 로 배포
     }
 }

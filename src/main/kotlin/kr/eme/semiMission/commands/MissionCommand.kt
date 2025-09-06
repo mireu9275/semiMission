@@ -22,18 +22,17 @@ object MissionCommand : TabExecutor {
         val sub = args[0].lowercase()
 
         // 플레이어 전용 서브커맨드 가드
-        if (sender !is Player && sub in setOf("open", "next", "prev", "previous")) {
+        if (sender !is Player && sub in setOf("open", "previous")) {
             sender.sendMessage("§c해당 명령어는 플레이어만 사용할 수 있습니다.")
             return true
         }
 
         return when (sub) {
             "open"      -> openGui(sender as Player)
-            "next"      -> nextPage(sender as Player)
             "prev",
-            "previous"  -> prevPage(sender as Player)
             "reload"    -> reloadState(sender)
             "complete"  -> completeMission(sender, args.getOrNull(1))
+            "clear"     -> clearState(sender)
             else        -> usage(sender)
         }
     }
@@ -47,7 +46,7 @@ object MissionCommand : TabExecutor {
     ): MutableList<String> {
         // 1번째 인자: 서브커맨드 추천
         if (args.size == 1) {
-            val base = listOf("open", "next", "prev", "reload", "complete")
+            val base = listOf("open", "reload", "complete")
             return base.filter { it.startsWith(args[0].lowercase()) }.toMutableList()
         }
 
@@ -75,18 +74,9 @@ object MissionCommand : TabExecutor {
     }
 
     private fun openGui(player: Player): Boolean {
-        GUIManager.resetPage(player)
-        GUIManager.openMissionGUI(player)
-        return true
-    }
-
-    private fun nextPage(player: Player): Boolean {
-        GUIManager.nextPage(player)
-        return true
-    }
-
-    private fun prevPage(player: Player): Boolean {
-        GUIManager.previousPage(player)
+        val gui = kr.eme.semiMission.objects.guis.MissionPageGUI(player, 1)
+        gui.setFirstGUI()
+        gui.open()
         return true
     }
 
@@ -96,7 +86,10 @@ object MissionCommand : TabExecutor {
         return true
     }
 
-    private fun completeMission(sender: CommandSender, idArg: String?): Boolean {
+    private fun completeMission(
+        sender: CommandSender,
+        idArg: String?
+    ): Boolean {
         if (sender is Player && !sender.isOp) {
             sender.sendMessage("§c권한이 없습니다.")
             return true
@@ -128,4 +121,18 @@ object MissionCommand : TabExecutor {
         sender.sendMessage("§a미션이 강제로 진행되었습니다. (현재 인덱스: ${MissionStateManager.getCurrentIndex()})")
         return true
     }
+    private fun clearState(sender: CommandSender): Boolean {
+        if (sender is Player && !sender.isOp) {
+            sender.sendMessage("§c권한이 없습니다.")
+            return true
+        }
+
+        // 초기화
+        MissionStateManager.reset()
+        MissionStateManager.save()
+
+        sender.sendMessage("§e미션 상태가 초기화되었습니다.")
+        return true
+    }
+
 }

@@ -1,7 +1,8 @@
 package kr.eme.semiMission
 
 import kr.eme.semiMission.commands.MissionCommand
-import kr.eme.semiMission.listeners.ProgressListener
+import kr.eme.semiMission.listeners.GUIListener
+import kr.eme.semiMission.listeners.MissionProgressListener
 import kr.eme.semiMission.managers.MissionStateManager
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -24,6 +25,7 @@ class SemiMission : JavaPlugin() {
     }
 
     private fun registerEvents() {
-        server.pluginManager.registerEvents(ProgressListener, this)
+        server.pluginManager.registerEvents(GUIListener, this)
+        server.pluginManager.registerEvents(MissionProgressListener, this)
     }
 }
