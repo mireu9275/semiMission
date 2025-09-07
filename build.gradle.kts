@@ -3,8 +3,8 @@ plugins {
     `maven-publish`
 }
 
-group = "kr.eme.semiMission"   // ✅ groupId
-version = "1.0.1"              // ✅ 버전 고정 (SNAPSHOT 대신)
+group = "kr.eme.semiMission"
+version = "1.0.2"
 
 repositories {
     mavenLocal()
