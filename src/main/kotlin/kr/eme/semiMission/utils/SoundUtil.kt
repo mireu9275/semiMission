@@ -15,4 +15,8 @@ object SoundUtil {
     fun complete(player: Player) {
         player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f)
     }
+
+    fun missionClear(player: Player) {
+        player.playSound(player.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f)
+    }
 }

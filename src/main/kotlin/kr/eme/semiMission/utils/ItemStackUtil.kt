@@ -76,4 +76,6 @@ object ItemStackUtil {
     fun iconLock(title: String, description: String, reward: String): ItemStack =
         withLore(Material.BROWN_DYE, title, description, reward, 6, "§c받지 않은 미션입니다.")
 
+    fun iconRewardPending(title: String, description: String, reward: String): ItemStack =
+        withLore(Material.BROWN_DYE, title, description, reward, 3, "§a보상을 수령할 수 있습니다.")
 }
