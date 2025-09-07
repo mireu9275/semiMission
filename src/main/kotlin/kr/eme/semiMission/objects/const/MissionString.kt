@@ -14,7 +14,7 @@ object MissionString {
     const val m4_desc = "통신 모듈에서 광물을 판매하세요."
 
     const val m5_title = "스토리지 모듈 설치"
-    const val m5_desc = "통신 모듈에서 스토리지 모듈(2중)을 구매 후 설치하세요."
+    const val m5_desc = "통신 모듈에서 스토리지 모듈(중)을 구매 후 설치하세요."
 
     const val m6_title = "분쇄기 모듈 및 용광로 모듈 설치"
     const val m6_desc = "스토리지 모듈 안에 분쇄기 모듈 및 용광로 모듈을 설치하세요."
