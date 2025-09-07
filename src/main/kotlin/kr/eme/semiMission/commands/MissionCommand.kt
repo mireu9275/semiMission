@@ -1,5 +1,6 @@
 package kr.eme.semiMission.commands
 
+import io.papermc.paper.command.brigadier.argument.ArgumentTypes.player
 import kr.eme.semiMission.managers.GUIManager
 import kr.eme.semiMission.managers.MissionManager
 import kr.eme.semiMission.managers.MissionStateManager
@@ -33,6 +34,7 @@ object MissionCommand : TabExecutor {
             "reload"    -> reloadState(sender)
             "complete"  -> completeMission(sender, args.getOrNull(1))
             "clear"     -> clearState(sender)
+            "debug"     -> debugItemNBT(sender)
             else        -> usage(sender)
         }
     }
@@ -134,5 +136,28 @@ object MissionCommand : TabExecutor {
         sender.sendMessage("§e미션 상태가 초기화되었습니다.")
         return true
     }
+
+    private fun debugItemNBT(sender: CommandSender): Boolean {
+        if (sender !is Player) {
+            sender.sendMessage("§c플레이어만 사용할 수 있습니다.")
+            return true
+        }
+
+        val item = sender.inventory.itemInMainHand
+        if (item.type.isAir) {
+            sender.sendMessage("§c손에 아이템을 들고 있지 않습니다.")
+            return true
+        }
+
+        // Bukkit serialize() → Map<String, Any> 로 변환
+        val serialized = item.serialize()
+        sender.sendMessage("§e[아이템 전체 NBT/직렬화 정보]")
+        serialized.forEach { (k, v) ->
+            sender.sendMessage("§7$k: $v")
+        }
+
+        return true
+    }
+
 
 }

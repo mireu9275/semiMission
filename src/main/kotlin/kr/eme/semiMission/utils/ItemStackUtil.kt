@@ -13,6 +13,29 @@ object ItemStackUtil {
         return item
     }
 
+    fun rewardItem(
+        material: Material,
+        name: String = "",
+        lore: List<String>? = null,
+        customModelData: Int? = null,
+        amount: Int = 1
+    ): ItemStack {
+        return ItemStack(material, amount).apply {
+            itemMeta = itemMeta?.apply {
+                if (name.isNotBlank()) setDisplayName(name)
+                if (!lore.isNullOrEmpty()) {
+                    this.lore = lore
+                } else {
+                    this.lore = null
+                }
+                if (customModelData != null) setCustomModelData(customModelData)
+            }
+        }
+    }
+
+
+
+
     // 네비게이션 버튼
     fun leftButton(name: String): ItemStack = build(Material.BROWN_DYE) { meta ->
         meta.setDisplayName(name)
