@@ -1,4 +1,4 @@
-package kr.eme.semiMission.objects.model
+package kr.eme.semiMission.objects.models
 
 data class Mission(
     val id: Int,

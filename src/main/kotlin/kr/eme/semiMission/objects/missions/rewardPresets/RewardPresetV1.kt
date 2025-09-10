@@ -1,8 +1,10 @@
-package kr.eme.semiMission.objects.model
+package kr.eme.semiMission.objects.missions.rewardPresets
 
+import kr.eme.semiMission.objects.models.ItemReward
+import kr.eme.semiMission.objects.models.Reward
 import org.bukkit.Material
 
-object RewardPreset {
+object RewardPresetV1 {
     val m1_reward = Reward(
         500
     )
@@ -11,17 +13,17 @@ object RewardPreset {
     )
     val m3_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 20, "§f철 주괴","", 21)
+            ItemReward(Material.RED_DYE, 20, "§f철 주괴", "", 21)
         )
     )
     val m4_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 15, "§f철 주괴","", 21)
+            ItemReward(Material.RED_DYE, 15, "§f철 주괴", "", 21)
         )
     )
     val m5_reward = Reward(
         items = listOf(
-            ItemReward(Material.IRON_HORSE_ARMOR, 1, "§f용광로 모듈","", 6)
+            ItemReward(Material.IRON_HORSE_ARMOR, 1, "§f용광로 모듈", "", 6)
             //용광로 모듈 1개
         )
     )
@@ -30,7 +32,7 @@ object RewardPreset {
     )
     val m7_reward = Reward(
         items = listOf(
-            ItemReward(Material.SADDLE, 1, "§f철 주괴 레시피","", 25)
+            ItemReward(Material.SADDLE, 1, "§f철 주괴 레시피", "", 25)
             //철 주괴 레시피 1개
         )
     )
@@ -39,14 +41,14 @@ object RewardPreset {
     )
     val m9_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 5, "§f철 주괴","", 21),
-            ItemReward(Material.RED_DYE, 3, "§f알루미늄 주괴","", 20)
+            ItemReward(Material.RED_DYE, 5, "§f철 주괴", "", 21),
+            ItemReward(Material.RED_DYE, 3, "§f알루미늄 주괴", "", 20)
             //알루미늄 주괴 3
         )
     )
     val m10_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 6, "§f리튬 주괴","", 23)
+            ItemReward(Material.RED_DYE, 6, "§f리튬 주괴", "", 23)
             // 리튬 주괴 6
         )
     )
@@ -55,13 +57,13 @@ object RewardPreset {
     )
     val m12_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 10, "§f철","", 3)
+            ItemReward(Material.RED_DYE, 10, "§f철", "", 3)
             //철10개
         )
     )
     val m13_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 20, "§f철","", 3)
+            ItemReward(Material.RED_DYE, 20, "§f철", "", 3)
             //철20개
         )
     )
@@ -70,7 +72,7 @@ object RewardPreset {
     )
     val m15_reward = Reward(
         items = listOf(
-            ItemReward(Material.BOWL, 5, "§f머그잔","§fJava", 1)
+            ItemReward(Material.BOWL, 5, "§f머그잔", "§fJava", 1)
             //머그잔5개
         )
     )
@@ -79,8 +81,8 @@ object RewardPreset {
     )
     val m17_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 15, "§f구리 주괴","", 22),
-            ItemReward(Material.RED_DYE, 3, "§f리튬 주괴","", 23)
+            ItemReward(Material.RED_DYE, 15, "§f구리 주괴", "", 22),
+            ItemReward(Material.RED_DYE, 3, "§f리튬 주괴", "", 23)
             //구리주괴 15개 리튬 주괴 3개
         )
     )
@@ -92,7 +94,7 @@ object RewardPreset {
     )
     val m20_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 15, "§f백금 주괴","", 25)
+            ItemReward(Material.RED_DYE, 15, "§f백금 주괴", "", 25)
             //백금 주괴 15
         )
     )

@@ -1,7 +1,7 @@
 package kr.eme.semiMission.managers
 
-import kr.eme.semiMission.objects.model.ItemReward
-import kr.eme.semiMission.objects.model.Mission
+import kr.eme.semiMission.objects.models.ItemReward
+import kr.eme.semiMission.objects.models.Mission
 import kr.eme.semiMission.utils.ItemStackUtil
 import kr.eme.semiMission.utils.SoundUtil
 import kr.eme.semiMoneyGlobal.managers.MoneyManager

@@ -1,5 +1,6 @@
 package kr.eme.semiMission.objects.guis
 
+import kr.eme.semiMission.enums.MissionVersion
 import kr.eme.semiMission.managers.MissionManager
 import kr.eme.semiMission.managers.MissionStateManager
 import kr.eme.semiMission.managers.RewardManager
@@ -12,6 +13,7 @@ import org.bukkit.event.inventory.InventoryDragEvent
 
 class MissionPageGUI(
     player: Player,
+    private val version: MissionVersion,
     private val page: Int // 1..5
 ) : GUI(player, titleFor(page), 6) {
 
@@ -34,7 +36,7 @@ class MissionPageGUI(
     override fun setFirstGUI() {
         clear()
 
-        val missions = MissionManager.missions
+        val missions = MissionManager.getMissions(version)
         val curIndex = MissionStateManager.getCurrentIndex()
         val start = (page - 1) * MISSION_SLOTS.size
 
@@ -76,7 +78,7 @@ class MissionPageGUI(
             return
         }
 
-        val missions = MissionManager.missions
+        val missions = MissionManager.getMissions(version)
         val curIndex = MissionStateManager.getCurrentIndex()
 
         val slotIndex = MISSION_SLOTS.indexOf(slot)
@@ -150,14 +152,14 @@ class MissionPageGUI(
         when (name) {
             "§f이전 페이지" -> {
                 if (page <= 1) return
-                MissionPageGUI(player, page - 1).also {
+                MissionPageGUI(player, version,page - 1).also {
                     it.setFirstGUI(); it.open()
                 }
                 SoundUtil.click(player)
             }
             "§f다음 페이지" -> {
                 if (page >= LAST_PAGE) return
-                MissionPageGUI(player, page + 1).also {
+                MissionPageGUI(player, version,page + 1).also {
                     it.setFirstGUI(); it.open()
                 }
                 SoundUtil.click(player)
