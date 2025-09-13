@@ -4,10 +4,13 @@ import kr.eme.semiMission.enums.MissionVersion
 import kr.eme.semiMission.managers.MissionManager
 import kr.eme.semiMission.managers.MissionStateManager
 import kr.eme.semiMission.objects.guis.MissionInitGUI
+import kr.eme.semiMission.objects.items.ItemTemplates
+import kr.eme.semiMission.objects.models.ItemReward
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
 import org.bukkit.entity.Player
+import kotlin.reflect.full.memberProperties
 
 object MissionCommand : TabExecutor {
 
@@ -32,6 +35,7 @@ object MissionCommand : TabExecutor {
             "complete"  -> completeMission(sender, args.getOrNull(1), args.getOrNull(2))
             "clear"     -> clearState(sender, args.getOrNull(1))
             "debug"     -> debugItemNBT(sender)
+            "testitem"  -> testItem(sender, args.getOrNull(1))
             else        -> usage(sender)
         }
     }
@@ -42,8 +46,12 @@ object MissionCommand : TabExecutor {
         alias: String,
         args: Array<out String>
     ): MutableList<String> {
+        if (!sender.isOp) {
+            return mutableListOf()
+        }
+
         if (args.size == 1) {
-            val base = listOf("open", "reload", "complete", "clear", "debug")
+            val base = listOf("open", "reload", "complete", "clear", "debug", "testitem")
             return base.filter { it.startsWith(args[0].lowercase()) }.toMutableList()
         }
 
@@ -56,6 +64,14 @@ object MissionCommand : TabExecutor {
             if (version != null) {
                 return MissionManager.getMissions(version).map { it.id.toString() }.toMutableList()
             }
+        }
+
+        // 여기 추가: /mission testItem <아이템명> 자동완성
+        if (args.size == 2 && args[0].equals("testitem", ignoreCase = true)) {
+            return kr.eme.semiMission.objects.items.ItemTemplates::class.memberProperties
+                .map { it.name }
+                .filter { it.startsWith(args[1], ignoreCase = true) }
+                .toMutableList()
         }
 
         return mutableListOf()
@@ -176,6 +192,33 @@ object MissionCommand : TabExecutor {
         val serialized = item.serialize()
         sender.sendMessage("§e[아이템 전체 NBT/직렬화 정보]")
         serialized.forEach { (k, v) -> sender.sendMessage("§7$k: $v") }
+
+        return true
+    }
+
+    private fun testItem(sender: CommandSender, name: String?): Boolean {
+        if (sender !is Player) {
+            sender.sendMessage("§c플레이어만 사용할 수 있습니다.")
+            return true
+        }
+        if (name == null) {
+            sender.sendMessage("§c사용법: /mission testItem <아이템변수명>")
+            return true
+        }
+
+        // ItemTemplates 안의 val 변수 중에서 이름으로 찾기
+        val reward = ItemTemplates::class.memberProperties
+            .firstOrNull { it.name.equals(name, ignoreCase = true) }
+            ?.getter
+            ?.call(ItemTemplates) as? ItemReward
+
+        if (reward == null) {
+            sender.sendMessage("§c존재하지 않는 아이템: $name")
+        } else {
+            val item = reward.toItemStack()
+            sender.inventory.addItem(item)
+            sender.sendMessage("§a${reward.name} 지급 완료!")
+        }
 
         return true
     }

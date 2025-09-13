@@ -34,7 +34,7 @@ object ItemTemplates {
     val weedkillerCapsule = IR(M.ORANGE_DYE, 1, "§f제초 캡슐", "§f잡초를 제거합니다.", 4)
 
     val knife = IR(M.WOODEN_SHOVEL,1,"§f나이프","",10)
-    val coffee = IR(M.BOW,1,"§f커피","",2)
+    val coffee = IR(M.BOWL,1,"§f커피","",2)
     val longSword = IR(M.WOODEN_SHOVEL, 1, "§f장도","",11)
     val drill = IR(M.WOODEN_SHOVEL, 1, "§f가벼운 채굴기", "", 2)
 }

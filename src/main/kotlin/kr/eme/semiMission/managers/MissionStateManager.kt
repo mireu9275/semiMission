@@ -74,8 +74,17 @@ object MissionStateManager {
 
     fun isVersionCleared(version: MissionVersion): Boolean {
         val missions = MissionManager.getMissions(version)
-        val curIndex = getCurrentIndex(version)
-        return curIndex >= missions.size
+        if (missions.isEmpty()) return false
+        return missions.all { isRewardClaimed(version, it.id) }
+    }
+
+    fun canStart(version: MissionVersion): Boolean {
+        val allVersions = MissionVersion.entries
+        val index = allVersions.indexOf(version)
+        if (index <= 0) return true // V1은 항상 시작 가능
+
+        // 앞의 모든 버전이 클리어되어야 true
+        return allVersions.take(index).all { isVersionCleared(it) }
     }
 
     fun save() {
