@@ -15,18 +15,33 @@ class MissionPageGUI(
     player: Player,
     private val version: MissionVersion,
     private val page: Int // 1..5
-) : GUI(player, titleFor(page), 6) {
+) : GUI(player, titleFor(version, page), 6) {
 
     companion object {
-        private val PAGE_TITLES = arrayOf(
-            "§f\u340F\u3425", // 1
-            "§f\u340F\u3426", // 2
-            "§f\u340F\u3427", // 3
-            "§f\u340F\u3428", // 4
-            "§f\u340F\u3429"  // 5
+        private val PAGE_TITLES_V1 = arrayOf(
+            "§f\u340F\u3425", // 1 v1
+            "§f\u340F\u3426", // 2 v1
+            "§f\u340F\u3427", // 3 v1
+            "§f\u340F\u3428", // 4 v1
+            "§f\u340F\u3429"  // 5 v1
+        )
+
+        private val PAGE_TITLES_V2 = arrayOf(
+            "§f\u340F\u3430", // 1 v2
+            "§f\u340F\u3431", // 2 v2
+            "§f\u340F\u3432", // 3 v2
+            "§f\u340F\u3433", // 4 v2
+            "§f\u340F\u3434"  // 5 v2
         )
         private const val LAST_PAGE = 5
-        private fun titleFor(page: Int) = PAGE_TITLES[(page - 1).coerceIn(0, PAGE_TITLES.lastIndex)]
+
+        private fun titleFor(version: MissionVersion, page: Int): String {
+            val titles = when (version) {
+                MissionVersion.V1 -> PAGE_TITLES_V1
+                MissionVersion.V2 -> PAGE_TITLES_V2
+            }
+            return titles[(page - 1).coerceIn(0, titles.lastIndex)]
+        }
 
         private val MISSION_SLOTS = intArrayOf(19, 21, 23, 25)
         private const val SLOT_PREV = 36
@@ -37,7 +52,7 @@ class MissionPageGUI(
         clear()
 
         val missions = MissionManager.getMissions(version)
-        val curIndex = MissionStateManager.getCurrentIndex()
+        val curIndex = MissionStateManager.getCurrentIndex(version)
         val start = (page - 1) * MISSION_SLOTS.size
 
         for (i in MISSION_SLOTS.indices) {
@@ -47,18 +62,24 @@ class MissionPageGUI(
 
             val icon = when {
                 global < curIndex -> {
-                    if (MissionStateManager.isRewardClaimed(mission.id)) {
+                    if (MissionStateManager.isRewardClaimed(version, mission.id)) {
                         ItemStackUtil.iconDone("§f${mission.title}", mission.description, mission.rewardDescription)
                     } else {
                         ItemStackUtil.iconRewardPending("§f${mission.title}", mission.description, mission.rewardDescription)
                     }
                 }
-                global == curIndex -> ItemStackUtil.iconProgress("§f${mission.title}", mission.description, mission.rewardDescription)
+                global == curIndex -> ItemStackUtil.iconProgress(
+                    "§f${mission.title}", mission.description, mission.rewardDescription
+                )
                 else -> {
                     if (curIndex == -1 && global == 0) {
-                        ItemStackUtil.iconAcceptable("§f${mission.title}", mission.description, mission.rewardDescription)
+                        ItemStackUtil.iconAcceptable(
+                            "§f${mission.title}", mission.description, mission.rewardDescription
+                        )
                     } else {
-                        ItemStackUtil.iconLock("§f${mission.title}", mission.description, mission.rewardDescription)
+                        ItemStackUtil.iconLock(
+                            "§f${mission.title}", mission.description, mission.rewardDescription
+                        )
                     }
                 }
             }
@@ -74,12 +95,11 @@ class MissionPageGUI(
 
         val clicked = currentItem ?: return
         val name = clicked.itemMeta?.displayName ?: run {
-            SoundUtil.error(player)
-            return
+            SoundUtil.error(player); return
         }
 
         val missions = MissionManager.getMissions(version)
-        val curIndex = MissionStateManager.getCurrentIndex()
+        val curIndex = MissionStateManager.getCurrentIndex(version)
 
         val slotIndex = MISSION_SLOTS.indexOf(slot)
         if (slotIndex != -1) {
@@ -88,19 +108,16 @@ class MissionPageGUI(
             val mission = missions[global]
 
             when {
-                MissionStateManager.isLocked(global) -> {
+                MissionStateManager.isLocked(version, global) -> {
                     if (global == 0 && curIndex == -1) {
-                        if (MissionStateManager.acceptFirst()) {
-                            MissionStateManager.save()
+                        if (MissionStateManager.acceptFirst(version)) {
                             player.sendMessage("§e[미션 수락] ${mission.title}")
                             SoundUtil.click(player)
 
                             setItem(
                                 MISSION_SLOTS[0],
                                 ItemStackUtil.iconProgress(
-                                    "§f${mission.title}",
-                                    mission.description,
-                                    mission.rewardDescription
+                                    "§f${mission.title}", mission.description, mission.rewardDescription
                                 )
                             )
                             player.updateInventory()
@@ -112,21 +129,18 @@ class MissionPageGUI(
                 }
 
                 global < curIndex -> {
-                    if (!MissionStateManager.isRewardClaimed(mission.id)) {
+                    if (!MissionStateManager.isRewardClaimed(version, mission.id)) {
                         // ✅ 보상 지급
                         RewardManager.give(mission, player.name)
-                        MissionStateManager.markRewardClaimed(mission.id)
-                        MissionStateManager.save()
+                        MissionStateManager.markRewardClaimed(version, mission.id)
                         player.sendMessage("§a보상을 수령했습니다!")
                         SoundUtil.complete(player)
 
-                        // 🔹 GUI 새로 열지 말고, 해당 슬롯만 교체
+                        // 🔹 해당 슬롯만 교체
                         setItem(
                             slot,
                             ItemStackUtil.iconDone(
-                                "§f${mission.title}",
-                                mission.description,
-                                mission.rewardDescription
+                                "§f${mission.title}", mission.description, mission.rewardDescription
                             )
                         )
                         player.updateInventory()
@@ -152,14 +166,14 @@ class MissionPageGUI(
         when (name) {
             "§f이전 페이지" -> {
                 if (page <= 1) return
-                MissionPageGUI(player, version,page - 1).also {
+                MissionPageGUI(player, version, page - 1).also {
                     it.setFirstGUI(); it.open()
                 }
                 SoundUtil.click(player)
             }
             "§f다음 페이지" -> {
                 if (page >= LAST_PAGE) return
-                MissionPageGUI(player, version,page + 1).also {
+                MissionPageGUI(player, version, page + 1).also {
                     it.setFirstGUI(); it.open()
                 }
                 SoundUtil.click(player)

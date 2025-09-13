@@ -19,6 +19,5 @@ object MissionManager {
     }
     fun currentIndexOf(version: MissionVersion, id: Int) = getMissions(version).indexOfFirst { it.id == id }
     fun getCurrent(version: MissionVersion, index: Int) = getMissions(version).getOrNull(index)
-    fun firstMissionId(version: MissionVersion): Int = getMissions(version).first().id
     fun lastIndex(version: MissionVersion): Int = getMissions(version).lastIndex
 }

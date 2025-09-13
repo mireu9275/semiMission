@@ -1,79 +1,109 @@
 package kr.eme.semiMission.managers
 
+import kr.eme.semiMission.enums.MissionVersion
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 
 object MissionStateManager {
+    private val currentIndexMap = mutableMapOf<MissionVersion, Int>()
+    private val rewardClaimedMap = mutableMapOf<MissionVersion, MutableSet<Int>>()
+
     private lateinit var file: File
     private lateinit var config: YamlConfiguration
 
-    private var currentIndex: Int = -1   // 현재 미션 인덱스 (-1 = 아직 첫 미션 수락 전)
-    private var completedCount: Int = 0 // 누적 완료 미션 수
-    private val claimedRewards = mutableSetOf<Int>() // 보상 수령 완료된 미션 ID들
-
     fun init(dataFolder: File) {
-        if (!dataFolder.exists()) dataFolder.mkdirs()
-        file = File(dataFolder, "mission_state.yml")
+        if (!dataFolder.exists()) {
+            dataFolder.mkdirs() // 상위 디렉토리 생성
+        }
+
+        file = File(dataFolder, "missions.yml")
         if (!file.exists()) {
-            file.parentFile.mkdirs()
-            file.writeText(
-                """
-                    currentIndex: -1
-                    completedCount: 0
-                    claimedRewards: []
-                """.trimIndent()
-            )
+            file.createNewFile()
         }
+
         config = YamlConfiguration.loadConfiguration(file)
-        currentIndex = config.getInt("currentIndex", -1)
-        completedCount = config.getInt("completedCount", 0)
-        claimedRewards.clear()
-        claimedRewards.addAll(config.getIntegerList("claimedRewards"))
-
-        if (currentIndex !in -1..MissionManager.lastIndex()) currentIndex = -1
-        if (completedCount < 0) completedCount = 0
+        load()
     }
 
-    fun save() {
-        config.set("currentIndex", currentIndex)
-        config.set("completedCount", completedCount)
-        config.set("claimedRewards", claimedRewards.toList())
-        config.save(file)
+
+    fun getCurrentIndex(version: MissionVersion): Int =
+        currentIndexMap[version] ?: -1
+
+    fun setCurrentIndex(version: MissionVersion, index: Int) {
+        currentIndexMap[version] = index
     }
 
-    @Synchronized fun getCurrentIndex(): Int = currentIndex
-
-    @Synchronized fun advanceIf(id: Int): Boolean {
-        if (MissionManager.getCurrent(currentIndex)?.id != id) return false
-        if (currentIndex < MissionManager.lastIndex()) {
-            currentIndex += 1
-        }
-        completedCount += 1
-        return true
-    }
-
-    fun getCompletedCount(): Int = completedCount
-    fun isLocked(index: Int): Boolean = index > currentIndex
-
-    fun isRewardClaimed(missionId: Int): Boolean = claimedRewards.contains(missionId)
-
-    fun markRewardClaimed(missionId: Int) {
-        claimedRewards.add(missionId)
-        save()
-    }
-
-    fun acceptFirst(): Boolean {
-        if (currentIndex == -1) {
-            currentIndex = 0
+    fun acceptFirst(version: MissionVersion): Boolean {
+        if (getCurrentIndex(version) == -1) {
+            setCurrentIndex(version, 0)
+            save()
             return true
         }
         return false
     }
 
-    fun reset() {
-        currentIndex = -1
-        completedCount = 0
-        claimedRewards.clear()
+    fun advanceIf(version: MissionVersion, id: Int): Boolean {
+        val curIndex = getCurrentIndex(version)
+        if (curIndex == -1) return false
+
+        val missions = MissionManager.getMissions(version)
+        if (curIndex >= missions.size) return false
+
+        val curMission = missions.getOrNull(curIndex) ?: return false
+        if (curMission.id == id) {
+            setCurrentIndex(version, curIndex + 1)
+            save()
+            return true
+        }
+        return false
+    }
+
+    fun isLocked(version: MissionVersion, index: Int): Boolean {
+        val curIndex = getCurrentIndex(version)
+        return curIndex < index && !(curIndex == -1 && index == 0)
+    }
+
+    fun isRewardClaimed(version: MissionVersion, missionId: Int): Boolean {
+        return rewardClaimedMap[version]?.contains(missionId) ?: false
+    }
+
+    fun markRewardClaimed(version: MissionVersion, missionId: Int) {
+        rewardClaimedMap.getOrPut(version) { mutableSetOf() }.add(missionId)
         save()
     }
+
+    fun isVersionCleared(version: MissionVersion): Boolean {
+        val missions = MissionManager.getMissions(version)
+        val curIndex = getCurrentIndex(version)
+        return curIndex >= missions.size
+    }
+
+    fun save() {
+        for (version in MissionVersion.entries) {
+            config.set("missions.${version}.currentIndex", getCurrentIndex(version))
+            config.set("missions.${version}.rewardsClaimed", rewardClaimedMap[version]?.toList() ?: emptyList<Int>())
+        }
+        config.save(file)
+    }
+
+    private fun load() {
+        for (version in MissionVersion.entries) {
+            val index = config.getInt("missions.${version}.currentIndex", -1)
+            setCurrentIndex(version, index)
+
+            val rewards = config.getIntegerList("missions.${version}.rewardsClaimed").toMutableSet()
+            rewardClaimedMap[version] = rewards
+        }
+    }
+
+    fun reset(version: MissionVersion) {
+        setCurrentIndex(version, -1)
+        rewardClaimedMap[version] = mutableSetOf()
+        save()
+    }
+
+    fun resetAll() {
+        MissionVersion.entries.forEach { reset(it) }
+    }
+
 }
