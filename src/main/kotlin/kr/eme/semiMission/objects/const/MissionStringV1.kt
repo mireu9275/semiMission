@@ -1,6 +1,6 @@
 package kr.eme.semiMission.objects.const
 
-object MissionString {
+object MissionStringV1 {
     const val m1_title = "기본 아이템 받기"
     const val m1_desc = "홈 모듈에서 기본 아이템을 지급받으세요."
 

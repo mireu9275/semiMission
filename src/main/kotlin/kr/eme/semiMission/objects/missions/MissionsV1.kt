@@ -1,6 +1,6 @@
 package kr.eme.semiMission.objects.missions
 
-import kr.eme.semiMission.objects.const.MissionString as MS
+import kr.eme.semiMission.objects.const.MissionStringV1 as MS
 import kr.eme.semiMission.objects.missions.conditionPresets.ConditionPresetV1 as CP
 import kr.eme.semiMission.objects.missions.rewardPresets.RewardPresetV1 as RP
 import kr.eme.semiMission.objects.models.Mission

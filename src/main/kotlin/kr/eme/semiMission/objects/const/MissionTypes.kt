@@ -9,4 +9,5 @@ object MissionTypes {
     const val PLAYER_EP = "PLAYER_EP"
     const val CRAFTING = "CRAFTING"
     const val FARMING = "FARMING"
+    const val MODULE_UPGRADE = "MODULE_UPGRADE"
 }

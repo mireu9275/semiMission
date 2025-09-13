@@ -14,6 +14,7 @@ object MissionTargets {
     const val CROSS_EXTENSION = "cross_extension"
     const val COFFEE_MODULE = "coffee_module"
     const val UPGRADE = "upgrade"
-    const val EP_300K = "ep_300k"
-    const val EP_500K = "ep_500k"
+    const val EP = "ep"
+    const val ACCESS_MODULE = "access_module"
+    const val TOWER = "tower"
 }

@@ -28,7 +28,8 @@ java {
 
 tasks.jar {
     archiveFileName = "${project.name}-${project.version}.jar"
-    destinationDirectory = file("C:\\Users\\mireu\\Desktop\\Minecraft\\Bukkit\\paper 1.21.4 (Semicolon Primary Colony)\\plugins")
+    //destinationDirectory = file("C:\\Users\\mireu\\Desktop\\Minecraft\\Bukkit\\paper 1.21.4 (Semicolon Primary Colony)\\plugins") // Notebook
+    destinationDirectory = file("C:\\Users\\Home\\Desktop\\Develop\\minecraft\\Bukkit\\paper 1.21.4 (Semicolon Primary Colony)\\plugins") // Computer
     manifest {
         attributes["Main-Class" ] = "kr.eme.semiMission.SemiMission"
     }

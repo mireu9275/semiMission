@@ -1,8 +1,7 @@
 package kr.eme.semiMission.objects.missions.rewardPresets
 
-import kr.eme.semiMission.objects.models.ItemReward
 import kr.eme.semiMission.objects.models.Reward
-import org.bukkit.Material
+import kr.eme.semiMission.objects.items.ItemTemplates as IT
 
 object RewardPresetV1 {
     val m1_reward = Reward(
@@ -13,18 +12,17 @@ object RewardPresetV1 {
     )
     val m3_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 20, "§f철 주괴", "", 21)
+            IT.ironIngot.copy(amount = 20)
         )
     )
     val m4_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 15, "§f철 주괴", "", 21)
+            IT.ironIngot.copy(amount = 15)
         )
     )
     val m5_reward = Reward(
         items = listOf(
-            ItemReward(Material.IRON_HORSE_ARMOR, 1, "§f용광로 모듈", "", 6)
-            //용광로 모듈 1개
+            IT.furnaceModule.copy(amount = 1)
         )
     )
     val m6_reward = Reward(
@@ -32,8 +30,7 @@ object RewardPresetV1 {
     )
     val m7_reward = Reward(
         items = listOf(
-            ItemReward(Material.SADDLE, 1, "§f철 주괴 레시피", "", 25)
-            //철 주괴 레시피 1개
+            IT.ironIngotRecipe.copy(amount = 1)
         )
     )
     val m8_reward = Reward(
@@ -41,15 +38,13 @@ object RewardPresetV1 {
     )
     val m9_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 5, "§f철 주괴", "", 21),
-            ItemReward(Material.RED_DYE, 3, "§f알루미늄 주괴", "", 20)
-            //알루미늄 주괴 3
+            IT.ironIngot.copy(amount = 5),
+            IT.aluminumIngot.copy(amount = 3)
         )
     )
     val m10_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 6, "§f리튬 주괴", "", 23)
-            // 리튬 주괴 6
+            IT.lithiumIngot.copy(amount = 6)
         )
     )
     val m11_reward = Reward(
@@ -57,14 +52,12 @@ object RewardPresetV1 {
     )
     val m12_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 10, "§f철", "", 3)
-            //철10개
+            IT.ironOre.copy(amount = 10)
         )
     )
     val m13_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 20, "§f철", "", 3)
-            //철20개
+            IT.ironOre.copy(amount = 20)
         )
     )
     val m14_reward = Reward(
@@ -72,8 +65,7 @@ object RewardPresetV1 {
     )
     val m15_reward = Reward(
         items = listOf(
-            ItemReward(Material.BOWL, 5, "§f머그잔", "§fJava", 1)
-            //머그잔5개
+            IT.mug.copy(amount = 5)
         )
     )
     val m16_reward = Reward(
@@ -81,9 +73,8 @@ object RewardPresetV1 {
     )
     val m17_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 15, "§f구리 주괴", "", 22),
-            ItemReward(Material.RED_DYE, 3, "§f리튬 주괴", "", 23)
-            //구리주괴 15개 리튬 주괴 3개
+            IT.copperIngot.copy(amount = 15),
+            IT.lithiumIngot.copy(amount = 3)
         )
     )
     val m18_reward = Reward(
@@ -94,8 +85,7 @@ object RewardPresetV1 {
     )
     val m20_reward = Reward(
         items = listOf(
-            ItemReward(Material.RED_DYE, 15, "§f백금 주괴", "", 25)
-            //백금 주괴 15
+            IT.platinumIngot.copy(amount = 15)
         )
     )
 }

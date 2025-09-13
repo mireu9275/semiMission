@@ -63,22 +63,22 @@ class MissionPageGUI(
             val icon = when {
                 global < curIndex -> {
                     if (MissionStateManager.isRewardClaimed(version, mission.id)) {
-                        ItemStackUtil.iconDone("§f${mission.title}", mission.description, mission.rewardDescription)
+                        ItemStackUtil.iconDone("§f${mission.title}", version, mission.description, mission.rewardDescription)
                     } else {
-                        ItemStackUtil.iconRewardPending("§f${mission.title}", mission.description, mission.rewardDescription)
+                        ItemStackUtil.iconRewardPending("§f${mission.title}", version,mission.description, mission.rewardDescription)
                     }
                 }
                 global == curIndex -> ItemStackUtil.iconProgress(
-                    "§f${mission.title}", mission.description, mission.rewardDescription
+                    "§f${mission.title}", version,mission.description, mission.rewardDescription
                 )
                 else -> {
                     if (curIndex == -1 && global == 0) {
                         ItemStackUtil.iconAcceptable(
-                            "§f${mission.title}", mission.description, mission.rewardDescription
+                            "§f${mission.title}", version,mission.description, mission.rewardDescription
                         )
                     } else {
                         ItemStackUtil.iconLock(
-                            "§f${mission.title}", mission.description, mission.rewardDescription
+                            "§f${mission.title}", version,mission.description, mission.rewardDescription
                         )
                     }
                 }
@@ -117,7 +117,7 @@ class MissionPageGUI(
                             setItem(
                                 MISSION_SLOTS[0],
                                 ItemStackUtil.iconProgress(
-                                    "§f${mission.title}", mission.description, mission.rewardDescription
+                                    "§f${mission.title}", version,mission.description, mission.rewardDescription
                                 )
                             )
                             player.updateInventory()
@@ -140,7 +140,7 @@ class MissionPageGUI(
                         setItem(
                             slot,
                             ItemStackUtil.iconDone(
-                                "§f${mission.title}", mission.description, mission.rewardDescription
+                                "§f${mission.title}", version,mission.description, mission.rewardDescription
                             )
                         )
                         player.updateInventory()

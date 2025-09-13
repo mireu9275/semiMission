@@ -1,5 +1,8 @@
 package kr.eme.semiMission.utils
 
+import com.sun.beans.introspect.PropertyInfo
+import kr.eme.semiMission.enums.MissionVersion
+import kr.eme.semiMission.objects.models.Mission
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
@@ -64,18 +67,38 @@ object ItemStackUtil {
         meta.setCustomModelData(customModel)
     }
 
-    fun iconDone(title: String, description: String, reward: String): ItemStack =
-        withLore(Material.BROWN_DYE, title, description, reward, 3, "§a이미 완료된 미션입니다.")
+    fun iconDone(title: String, version: MissionVersion, description: String, reward: String): ItemStack {
+        return when (version) {
+            MissionVersion.V1 -> withLore(Material.BROWN_DYE, title, description, reward, 3, "§a이미 완료된 미션입니다.")
+            MissionVersion.V2 -> withLore(Material.BROWN_DYE, title, description, reward, 24, "§a이미 완료된 미션입니다.")
+        }
+    }
 
-    fun iconProgress(title: String, description: String, reward: String): ItemStack =
-        withLore(Material.BROWN_DYE, title, description, reward, 5, "§e진행중인 미션입니다.")
+    fun iconProgress(title: String, version: MissionVersion, description: String, reward: String): ItemStack {
+        return when (version) {
+            MissionVersion.V1 -> withLore(Material.BROWN_DYE, title, description, reward, 5, "§e진행중인 미션입니다.")
+            MissionVersion.V2 -> withLore(Material.BROWN_DYE, title, description, reward, 26, "§e진행중인 미션입니다.")
+        }
+    }
 
-    fun iconAcceptable(title: String, description: String, reward: String): ItemStack =
-        withLore(Material.BROWN_DYE, title, description, reward, 6, "§e수락 가능한 미션입니다.")
+    fun iconAcceptable(title: String, version: MissionVersion, description: String, reward: String): ItemStack {
+        return when (version) {
+            MissionVersion.V1 -> withLore(Material.BROWN_DYE, title, description, reward, 7, "§e수락 가능한 미션입니다.")
+            MissionVersion.V2 -> withLore(Material.BROWN_DYE, title, description, reward, 28, "§e수락 가능한 미션입니다.")
+        }
+    }
 
-    fun iconLock(title: String, description: String, reward: String): ItemStack =
-        withLore(Material.BROWN_DYE, title, description, reward, 6, "§c받지 않은 미션입니다.")
+    fun iconLock(title: String, version: MissionVersion, description: String, reward: String): ItemStack {
+        return when (version) {
+            MissionVersion.V1 -> withLore(Material.BROWN_DYE, title, description, reward, 7, "§c받지 않은 미션입니다.")
+            MissionVersion.V2 -> withLore(Material.BROWN_DYE, title, description, reward, 28, "§c받지 않은 미션입니다.")
+        }
+    }
 
-    fun iconRewardPending(title: String, description: String, reward: String): ItemStack =
-        withLore(Material.BROWN_DYE, title, description, reward, 3, "§a보상을 수령할 수 있습니다.")
+    fun iconRewardPending(title: String,  version: MissionVersion, description: String, reward: String): ItemStack {
+        return when (version) {
+            MissionVersion.V1 -> withLore(Material.BROWN_DYE, title, description, reward, 3, "§a보상을 수령할 수 있습니다.")
+            MissionVersion.V2 -> withLore(Material.BROWN_DYE, title, description, reward, 24, "§a보상을 수령할 수 있습니다.")
+        }
+    }
 }
