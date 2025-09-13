@@ -22,7 +22,7 @@ object MissionsV2 {
             MS.m2_desc,
             CP.m2_cond,
             RP.m2_reward,
-            "§f"
+            "§f철 주괴 3개, 구리 주괴 3개"
         ),
         Mission(
             3,
@@ -30,7 +30,7 @@ object MissionsV2 {
             MS.m3_desc,
             CP.m3_cond,
             RP.m3_reward,
-            "§f"
+            "§fAl-Cu 레시피 1개"
         ),
         Mission(
             4,
@@ -38,7 +38,7 @@ object MissionsV2 {
             MS.m4_desc,
             CP.m4_cond,
             RP.m4_reward,
-            "§f"
+            "§fAl-Cu 합금 3개"
         ),
         Mission(
             5,
@@ -46,7 +46,7 @@ object MissionsV2 {
             MS.m5_desc,
             CP.m5_cond,
             RP.m5_reward,
-            "§f"
+            "§fCu-Au 합금 10개"
         ),
         Mission(
             6,
@@ -54,7 +54,7 @@ object MissionsV2 {
             MS.m6_desc,
             CP.m6_cond,
             RP.m6_reward,
-            "§f"
+            "§fEP 1250"
         ),
         Mission(
             7,
@@ -62,7 +62,7 @@ object MissionsV2 {
             MS.m7_desc,
             CP.m7_cond,
             RP.m7_reward,
-            "§f"
+            "§f나이프 1개"
         ),
         Mission(
             8,
@@ -70,7 +70,7 @@ object MissionsV2 {
             MS.m8_desc,
             CP.m8_cond,
             RP.m8_reward,
-            "§f"
+            "§f철 주괴 30개"
         ),
         Mission(
             9,
@@ -78,7 +78,7 @@ object MissionsV2 {
             MS.m9_desc,
             CP.m9_cond,
             RP.m9_reward,
-            "§f"
+            "§f커피 20개, 이동수단 1개"
         ),
         Mission(
             10,
@@ -86,7 +86,7 @@ object MissionsV2 {
             MS.m10_desc,
             CP.m10_cond,
             RP.m10_reward,
-            "§f"
+            "§fEP 3125"
         ),
         Mission(
             11,
@@ -94,7 +94,7 @@ object MissionsV2 {
             MS.m11_desc,
             CP.m11_cond,
             RP.m11_reward,
-            "§f"
+            "§fEP 2200"
         ),
         Mission(
             12,
@@ -102,7 +102,7 @@ object MissionsV2 {
             MS.m12_desc,
             CP.m12_cond,
             RP.m12_reward,
-            "§f"
+            "§f철 주괴 35개"
         ),
         Mission(
             13,
@@ -110,7 +110,7 @@ object MissionsV2 {
             MS.m13_desc,
             CP.m13_cond,
             RP.m13_reward,
-            "§f"
+            "§f2단계 드릴"
         ),
         Mission(
             14,
@@ -118,7 +118,7 @@ object MissionsV2 {
             MS.m14_desc,
             CP.m14_cond,
             RP.m14_reward,
-            "§f"
+            "§f장도, 나이프"
         ),
         Mission(
             15,
@@ -126,7 +126,7 @@ object MissionsV2 {
             MS.m15_desc,
             CP.m15_cond,
             RP.m15_reward,
-            "§f"
+            "§f리튬 주괴 4개, 티타늄 주괴 1개"
         ),
         Mission(
             16,
@@ -134,7 +134,7 @@ object MissionsV2 {
             MS.m16_desc,
             CP.m16_cond,
             RP.m16_reward,
-            "§f"
+            "§f영양 캡슐 15개, 성장 캡슐 15개, 제초 캡슐 15개"
         ),
         Mission(
             17,
@@ -142,7 +142,7 @@ object MissionsV2 {
             MS.m17_desc,
             CP.m17_cond,
             RP.m17_reward,
-            "§f"
+            "§fEP 4000"
         ),
         Mission(
             18,
@@ -150,7 +150,7 @@ object MissionsV2 {
             MS.m18_desc,
             CP.m18_cond,
             RP.m18_reward,
-            "§f"
+            "§f니켈 주괴 1개, 백금 주괴 1개, 티타늄 주괴 2개"
         ),
         Mission(
             19,
@@ -158,7 +158,7 @@ object MissionsV2 {
             MS.m19_desc,
             CP.m19_cond,
             RP.m19_reward,
-            "§f"
+            "§fEP 6000"
         ),
         Mission(
             20,
@@ -166,7 +166,7 @@ object MissionsV2 {
             MS.m20_desc,
             CP.m20_cond,
             RP.m20_reward,
-            "§f"
+            "§f엔딩 접근용 아이템"
         )
     )
 }
