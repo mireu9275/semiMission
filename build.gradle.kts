@@ -1,10 +1,10 @@
 plugins {
-    kotlin("jvm") version "2.2.0"
+    kotlin("jvm") version "2.0.0"
     `maven-publish`
 }
 
 group = "kr.eme.semiMission"
-version = "1.0.3"
+version = "1.0.4"
 
 repositories {
     mavenLocal()
