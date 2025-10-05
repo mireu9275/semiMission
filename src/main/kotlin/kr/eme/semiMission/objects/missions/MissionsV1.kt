@@ -1,9 +1,9 @@
 package kr.eme.semiMission.objects.missions
 
+import kr.eme.semiMission.objects.models.Mission
 import kr.eme.semiMission.objects.const.MissionStringV1 as MS
 import kr.eme.semiMission.objects.missions.conditionPresets.ConditionPresetV1 as CP
 import kr.eme.semiMission.objects.missions.rewardPresets.RewardPresetV1 as RP
-import kr.eme.semiMission.objects.models.Mission
 
 
 object MissionsV1 {
@@ -157,7 +157,7 @@ object MissionsV1 {
             MS.m17_desc,
             CP.m17_cond,
             RP.m17_reward,
-            "§f구리 주괴 15, 리튬 주고 ㅣ3개"
+            "§f구리 주괴 15개, 리튬 주괴 3개"
         ),
         Mission(
             18,

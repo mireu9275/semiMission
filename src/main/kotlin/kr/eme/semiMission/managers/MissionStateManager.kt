@@ -1,6 +1,8 @@
 package kr.eme.semiMission.managers
 
 import kr.eme.semiMission.enums.MissionVersion
+import kr.eme.semiMission.objects.models.Mission
+import kr.eme.semiMission.objects.models.MissionProgress
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 
@@ -8,12 +10,15 @@ object MissionStateManager {
     private val currentIndexMap = mutableMapOf<MissionVersion, Int>()
     private val rewardClaimedMap = mutableMapOf<MissionVersion, MutableSet<Int>>()
 
+    // 버전별 → 미션ID별 → 진행도
+    private val progressMap = mutableMapOf<MissionVersion, MutableMap<Int, MissionProgress>>()
+
     private lateinit var file: File
     private lateinit var config: YamlConfiguration
 
     fun init(dataFolder: File) {
         if (!dataFolder.exists()) {
-            dataFolder.mkdirs() // 상위 디렉토리 생성
+            dataFolder.mkdirs()
         }
 
         file = File(dataFolder, "missions.yml")
@@ -24,7 +29,6 @@ object MissionStateManager {
         config = YamlConfiguration.loadConfiguration(file)
         load()
     }
-
 
     fun getCurrentIndex(version: MissionVersion): Int =
         currentIndexMap[version] ?: -1
@@ -75,15 +79,16 @@ object MissionStateManager {
     fun isVersionCleared(version: MissionVersion): Boolean {
         val missions = MissionManager.getMissions(version)
         if (missions.isEmpty()) return false
-        return missions.all { isRewardClaimed(version, it.id) }
+        val curIndex = getCurrentIndex(version)
+        return curIndex >= missions.size // 모든 미션을 끝까지 진행 완료했으면 true
     }
+
 
     fun canStart(version: MissionVersion): Boolean {
         val allVersions = MissionVersion.entries
         val index = allVersions.indexOf(version)
         if (index <= 0) return true // V1은 항상 시작 가능
 
-        // 앞의 모든 버전이 클리어되어야 true
         return allVersions.take(index).all { isVersionCleared(it) }
     }
 
@@ -91,6 +96,15 @@ object MissionStateManager {
         for (version in MissionVersion.entries) {
             config.set("missions.${version}.currentIndex", getCurrentIndex(version))
             config.set("missions.${version}.rewardsClaimed", rewardClaimedMap[version]?.toList() ?: emptyList<Int>())
+
+            val progressSection = mutableMapOf<String, Map<String, Any>>()
+            progressMap[version]?.forEach { (missionId, prog) ->
+                val data = mutableMapOf<String, Any>()
+                data["completed"] = prog.completedConditions.toList()
+                data["count"] = prog.progressCount   // ✅ 누적 카운트 저장
+                progressSection[missionId.toString()] = data
+            }
+            config.set("missions.${version}.progress", progressSection)
         }
         config.save(file)
     }
@@ -102,12 +116,25 @@ object MissionStateManager {
 
             val rewards = config.getIntegerList("missions.${version}.rewardsClaimed").toMutableSet()
             rewardClaimedMap[version] = rewards
+
+            val section = config.getConfigurationSection("missions.${version}.progress")
+            val map = mutableMapOf<Int, MissionProgress>()
+            if (section != null) {
+                for (key in section.getKeys(false)) {
+                    val completed = config.getIntegerList("missions.${version}.progress.$key.completed").toMutableSet()
+                    val count = config.getInt("missions.${version}.progress.$key.count", 0) // ✅ 누적 카운트 로드
+                    val prog = MissionProgress(key, completed, count)
+                    map[key.toInt()] = prog
+                }
+            }
+            progressMap[version] = map
         }
     }
 
     fun reset(version: MissionVersion) {
         setCurrentIndex(version, -1)
         rewardClaimedMap[version] = mutableSetOf()
+        progressMap.remove(version)
         save()
     }
 
@@ -115,4 +142,51 @@ object MissionStateManager {
         MissionVersion.entries.forEach { reset(it) }
     }
 
+    fun addProgress(version: MissionVersion, mission: Mission, value: Int) {
+        val missionMap = progressMap.getOrPut(version) { mutableMapOf() }
+        val missionProgress = missionMap.getOrPut(mission.id) { MissionProgress(mission.id.toString()) }
+
+        val cond = mission.condition
+
+        if (cond.goal != null) {
+            // ✅ 누적형 미션
+            missionProgress.progressCount += value
+            val current = missionProgress.progressCount
+            val goal = cond.goal
+
+            if (current >= goal) {
+                completeMission(version, mission)
+                missionMap.remove(mission.id)
+            }
+        } else {
+            // ✅ 기존 체크리스트형
+            missionProgress.completedConditions.add(value)
+
+            val requiredValues = cond.values.toSet()
+            if (missionProgress.completedConditions.containsAll(requiredValues)) {
+                completeMission(version, mission)
+                missionMap.remove(mission.id)
+            }
+        }
+        save() // 진행도 저장
+    }
+
+    private fun completeMission(version: MissionVersion, mission: Mission) {
+        val curIndex = getCurrentIndex(version)
+        val missions = MissionManager.getMissions(version)
+
+        if (curIndex != -1 && curIndex < missions.size) {
+            val curMission = missions[curIndex]
+            if (curMission.id == mission.id) {
+                setCurrentIndex(version, curIndex + 1)
+                progressMap[version]?.remove(mission.id)
+                save()
+            }
+        }
+    }
+
+    fun getProgress(version: MissionVersion, missionId: Int): MissionProgress {
+        val missionMap = progressMap.getOrPut(version) { mutableMapOf() }
+        return missionMap.getOrPut(missionId) { MissionProgress(missionId.toString()) }
+    }
 }

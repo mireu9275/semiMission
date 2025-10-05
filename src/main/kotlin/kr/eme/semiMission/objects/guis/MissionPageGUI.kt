@@ -76,10 +76,42 @@ class MissionPageGUI(
                         )
                     }
                 }
-                global == curIndex -> ItemStackUtil.iconProgress(
-                    "§f${mission.title}", version,
-                    mission.description, mission.rewardDescription
-                )
+
+                // ===== 현재 진행 중인 미션 =====
+                global == curIndex -> {
+                    val item = ItemStackUtil.iconProgress(
+                        "§f${mission.title}", version,
+                        mission.description, mission.rewardDescription
+                    )
+
+                    // ✅ 진행도 정보 붙이기
+                    val progress = MissionStateManager.getProgress(version, mission.id)
+                    val meta = item.itemMeta
+                    val lore = mutableListOf<String>()
+
+                    if (mission.condition.goal != null) {
+                        // 누적형 미션
+                        lore.add("§7진행도: ${progress.progressCount}/${mission.condition.goal}")
+                    } else {
+                        // 체크리스트형 미션
+                        mission.condition.values.forEach { v ->
+                            val desc = mission.condition.descriptions[v] ?: return@forEach
+                            if (progress.completedConditions.contains(v)) {
+                                lore.add("§a✔ $desc 완료")
+                            } else {
+                                lore.add("§c✘ $desc 미완료")
+                            }
+                        }
+                    }
+
+                    if (lore.isNotEmpty()) {
+                        meta.lore = lore
+                        item.itemMeta = meta
+                    }
+
+                    item
+                }
+
                 else -> {
                     // ✅ 앞 버전이 전부 완료되지 않았다면 잠금
                     if (!MissionStateManager.canStart(version)) {
@@ -110,7 +142,7 @@ class MissionPageGUI(
 
         val homeItem = ItemStackUtil.build(org.bukkit.Material.GLASS_PANE) { meta ->
             meta.setCustomModelData(1)
-            meta.displayName(net.kyori.adventure.text.Component.text("§f메인으로"))
+            meta.displayName(net.kyori.adventure.text.Component.text("§f메인으로 이동"))
         }
         setItem(SLOT_HOME, homeItem)
     }
@@ -178,7 +210,7 @@ class MissionPageGUI(
                     }
                 }
 
-                // ===== 현재 진행 중인 미션 =====
+                // ===== 현재 진행 중인 미션 (클릭 시 안내) =====
                 global == curIndex -> {
                     player.sendMessage("§e현재 진행중인 미션: ${mission.title}")
                     player.sendMessage("§7${mission.description}")
@@ -186,6 +218,24 @@ class MissionPageGUI(
                         player.sendMessage("§b보상: ${mission.rewardDescription}")
                     else
                         player.sendMessage("§b보상: 없음")
+
+                    val progress = MissionStateManager.getProgress(version, mission.id)
+
+                    if (mission.condition.goal != null) {
+                        // 누적형 미션
+                        player.sendMessage("§7진행도: §e${progress.progressCount}/${mission.condition.goal}")
+                    } else {
+                        // 체크리스트형 미션
+                        mission.condition.values.forEach { v ->
+                            val desc = mission.condition.descriptions[v] ?: return@forEach
+                            if (progress.completedConditions.contains(v)) {
+                                player.sendMessage("§a✔ $desc 완료")
+                            } else {
+                                player.sendMessage("§c✘ $desc 미완료")
+                            }
+                        }
+                    }
+
                     SoundUtil.click(player)
                 }
 
@@ -214,7 +264,7 @@ class MissionPageGUI(
                 }
                 SoundUtil.click(player)
             }
-            "§f메인으로" -> {
+            "§f메인으로 이동" -> {
                 MissionInitGUI(player).also {
                     it.setFirstGUI(); it.open()
                 }
@@ -222,7 +272,6 @@ class MissionPageGUI(
             }
         }
     }
-
 
     override fun InventoryDragEvent.dragEvent() { isCancelled = true }
     override fun InventoryCloseEvent.closeEvent() { /* 유지 */ }

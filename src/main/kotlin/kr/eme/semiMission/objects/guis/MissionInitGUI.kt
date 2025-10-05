@@ -1,14 +1,16 @@
 package kr.eme.semiMission.objects.guis
 
 import kr.eme.semiMission.enums.MissionVersion
-import kr.eme.semiMission.managers.MissionStateManager
 import kr.eme.semiMission.utils.ItemStackUtil
 import kr.eme.semiMission.utils.SoundUtil
+import kr.eme.semiTradeShop.managers.GUIManager
+import kr.eme.semiTradeShop.objects.guis.InitShopGUI
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryDragEvent
+
 
 class MissionInitGUI(player: Player) : GUI(player, "§f\\u340F\\u3435", 6) {
     override fun setFirstGUI() {
@@ -41,6 +43,12 @@ class MissionInitGUI(player: Player) : GUI(player, "§f\\u340F\\u3435", 6) {
             meta.setCustomModelData(1)
         }
         rightSlots.forEach { setItem(it, v2Item) }
+
+        val homeItem = ItemStackUtil.build(Material.GLASS_PANE) { meta ->
+            meta.setDisplayName("§f메인으로 이동")
+            meta.setCustomModelData(1)
+        }
+        setItem(49, homeItem)
     }
 
     override fun InventoryClickEvent.clickEvent() {
@@ -69,6 +77,13 @@ class MissionInitGUI(player: Player) : GUI(player, "§f\\u340F\\u3435", 6) {
                 //    player.sendMessage("§c먼저  Mission 0.1v를 완료해야 합니다!")
                 //    SoundUtil.error(player)
                 //}
+            }
+            "§f메인으로 이동" -> {
+                val initShopGUI = InitShopGUI(player)
+                initShopGUI.setFirstGUI()
+                GUIManager.setGUI(player.uniqueId, initShopGUI)
+                initShopGUI.open()
+                SoundUtil.click(player)
             }
             else -> SoundUtil.error(player)
         }
