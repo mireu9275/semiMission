@@ -109,7 +109,16 @@ object MissionStateManager {
         config.save(file)
     }
 
-    private fun load() {
+    fun load() {
+        if (!file.exists()) return
+
+        try {
+            config.load(file)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return
+        }
+
         for (version in MissionVersion.entries) {
             val index = config.getInt("missions.${version}.currentIndex", -1)
             setCurrentIndex(version, index)

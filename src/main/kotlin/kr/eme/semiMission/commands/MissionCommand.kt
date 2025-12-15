@@ -113,8 +113,8 @@ object MissionCommand : TabExecutor {
     }
 
     private fun reloadState(sender: CommandSender): Boolean {
-        MissionStateManager.save()
-        sender.sendMessage("§a미션 상태가 저장/갱신되었습니다.")
+        MissionStateManager.load()
+        sender.sendMessage("§a미션 플러그인이 리로드 되었습니다.")
         return true
     }
 

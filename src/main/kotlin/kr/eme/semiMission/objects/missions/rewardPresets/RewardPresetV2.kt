@@ -46,8 +46,8 @@ object RewardPresetV2 {
     )
     val m9_reward = Reward(
         items = listOf(
-            IT.coffee.copy(amount = 20)
-            // 이동수단 추가해야 함.
+            IT.coffee.copy(amount = 20),
+            IT.transportationItem.copy(amount = 1)
         )
     )
     val m10_reward = Reward(

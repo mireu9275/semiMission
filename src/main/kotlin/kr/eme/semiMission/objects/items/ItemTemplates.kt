@@ -4,9 +4,15 @@ package kr.eme.semiMission.objects.items
 
 import kr.eme.semiMission.objects.models.ItemReward as IR
 import org.bukkit.Material as M
+import org.bukkit.NamespacedKey
+import org.bukkit.attribute.Attribute
+import org.bukkit.attribute.AttributeModifier
+import org.bukkit.inventory.EquipmentSlotGroup
+import kr.eme.semiMission.main
 
 object ItemTemplates {
     // material
+    // HIDE_ATTRIBUTES applied by default in ItemReward
 
     val ironOre = IR(M.RED_DYE, 1, "§f철", "", 3)
 
@@ -21,7 +27,7 @@ object ItemTemplates {
     val CUAUIngot = IR(M.RED_DYE, 1, "§f합금 주괴", "§fCu-Au 합금 주괴", 31)
 
     // module
-    val furnaceModule = IR(M.IRON_HORSE_ARMOR, 1, "§f용광로 모듈", "", 6)
+    val furnaceModule = IR(M.IRON_HORSE_ARMOR, 1, "§f용광로 모듈", "", 7)
 
     // recipe
     val ironIngotRecipe = IR(M.SADDLE, 1, "§f철 주괴 레시피", "", 25)
@@ -35,6 +41,21 @@ object ItemTemplates {
 
     val knife = IR(M.WOODEN_SHOVEL,1,"§f나이프","",10)
     val coffee = IR(M.BOWL,1,"§f커피","",2)
+
+    val transportationItem = IR(
+        material = M.IRON_BOOTS,
+        amount = 1,
+        name = "§f이동수단",
+        metaModifier = {
+            val stepModifier = AttributeModifier(
+                NamespacedKey(main, "step_height"),
+                1.0,
+                AttributeModifier.Operation.ADD_NUMBER,
+                EquipmentSlotGroup.FEET
+            )
+            addAttributeModifier(Attribute.STEP_HEIGHT, stepModifier)
+        }
+    )
     val longSword = IR(M.WOODEN_SHOVEL, 1, "§f장도","",11)
     val drill = IR(M.WOODEN_SHOVEL, 1, "§f가벼운 채굴기", "", 2)
 }

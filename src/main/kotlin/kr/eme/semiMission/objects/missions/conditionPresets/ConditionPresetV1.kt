@@ -6,8 +6,8 @@ import kr.eme.semiMission.objects.models.Condition as C
 
 object ConditionPresetV1 {
     val m1_cond = C(MT.DEVICE_INTERACTION, MTA.HOME_MODULE, listOf(1))
-    val m2_cond = C(MT.MODULE_PLACE, MTA.MINE_MODULE, listOf(1), goal = 2)
-    val m3_cond = C(MT.PLAYER_PROGRESS, MTA.MINE_MODULE, listOf(1))
+    val m2_cond = C(MT.MODULE_PLACE, MTA.MINE_MODULE, listOf(1))
+    val m3_cond = C(MT.PLAYER_PROGRESS, MTA.MINE_MODULE, listOf(1), goal = 2)
     val m4_cond = C(MT.TRADE, MTA.TRADE_MODULE, listOf(1))
     val m5_cond = C(MT.MODULE_PLACE, MTA.STORAGE_MODULE, listOf(1))
     val m6_cond = C(MT.MODULE_PLACE, MTA.STORAGE_MODULE, listOf(1,2), mapOf(1 to "분쇄기 모듈 설치", 2 to "용광로 모듈 설치"))
