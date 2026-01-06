@@ -1,0 +1,666 @@
+diff --git a/.idea/.name b/.idea/.name
+new file mode 100644
+index 0000000..7defe71
+--- /dev/null
++++ b/.idea/.name
+@@ -0,0 +1 @@
++PRCMission
+\ No newline at end of file
+diff --git a/build.gradle.kts b/build.gradle.kts
+index d41a82c..cce2911 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -3,7 +3,7 @@ plugins {
+     `maven-publish`
+ }
+ 
+-group = "kr.eme.semiMission"
++group = "kr.eme.prcMission"
+ version = "1.0.5"
+ 
+ repositories {
+@@ -34,7 +34,7 @@ tasks.jar {
+     //destinationDirectory = file("C:\\Users\\mireu\\Desktop\\Minecraft\\Bukkit\\paper 1.21.4 (Semicolon Primary Colony)\\plugins") // Notebook
+     destinationDirectory = file("C:\\Users\\Home\\Desktop\\Develop\\minecraft\\Bukkit\\paper 1.21.4 (Semicolon Primary Colony)\\plugins") // Computer
+     manifest {
+-        attributes["Main-Class" ] = "kr.eme.semiMission.SemiMission"
++        attributes["Main-Class" ] = "kr.eme.prcMission.PRCMission"
+     }
+ }
+ 
+@@ -43,7 +43,7 @@ publishing {
+         create<MavenPublication>("mavenJava") {
+             from(components["java"])
+             groupId = project.group.toString()      // ✅ group = "kr.eme.semiMission"
+-            artifactId = "SemiMission"              // ✅ artifactId
++            artifactId = "PRCMission"              // ✅ artifactId
+             version = project.version.toString()    // ✅ version = "1.0.0"
+         }
+     }
+diff --git a/settings.gradle.kts b/settings.gradle.kts
+index 158c90e..1cd439b 100644
+--- a/settings.gradle.kts
++++ b/settings.gradle.kts
+@@ -1,4 +1,4 @@
+ plugins {
+     id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+ }
+-rootProject.name = "SemiMission"
+\ No newline at end of file
++rootProject.name = "PRCMission"
+\ No newline at end of file
+diff --git a/src/main/kotlin/kr/eme/semiMission/Global.kt b/src/main/kotlin/kr/eme/prcMission/Global.kt
+similarity index 75%
+rename from src/main/kotlin/kr/eme/semiMission/Global.kt
+rename to src/main/kotlin/kr/eme/prcMission/Global.kt
+index a1cee40..497cb33 100644
+--- a/src/main/kotlin/kr/eme/semiMission/Global.kt
++++ b/src/main/kotlin/kr/eme/prcMission/Global.kt
+@@ -1,4 +1,4 @@
+-package kr.eme.semiMission
++package kr.eme.prcMission
+ 
+ import org.bukkit.plugin.java.JavaPlugin
+ 
+diff --git a/src/main/kotlin/kr/eme/semiMission/SemiMission.kt b/src/main/kotlin/kr/eme/prcMission/PRCMission.kt
+similarity index 73%
+rename from src/main/kotlin/kr/eme/semiMission/SemiMission.kt
+rename to src/main/kotlin/kr/eme/prcMission/PRCMission.kt
+index 1fbe27e..ebe65f8 100644
+--- a/src/main/kotlin/kr/eme/semiMission/SemiMission.kt
++++ b/src/main/kotlin/kr/eme/prcMission/PRCMission.kt
+@@ -1,12 +1,12 @@
+-package kr.eme.semiMission
++package kr.eme.prcMission
+ 
+-import kr.eme.semiMission.commands.MissionCommand
+-import kr.eme.semiMission.listeners.GUIListener
+-import kr.eme.semiMission.listeners.MissionProgressListener
+-import kr.eme.semiMission.managers.MissionStateManager
++import kr.eme.prcMission.commands.MissionCommand
++import kr.eme.prcMission.listeners.GUIListener
++import kr.eme.prcMission.listeners.MissionProgressListener
++import kr.eme.prcMission.managers.MissionStateManager
+ import org.bukkit.plugin.java.JavaPlugin
+ 
+-class SemiMission : JavaPlugin() {
++class PRCMission : JavaPlugin() {
+     override fun onEnable() {
+         main = this
+         MissionStateManager.init(dataFolder)
+diff --git a/src/main/kotlin/kr/eme/semiMission/api/events/MissionEvent.kt b/src/main/kotlin/kr/eme/prcMission/api/events/MissionEvent.kt
+similarity index 82%
+rename from src/main/kotlin/kr/eme/semiMission/api/events/MissionEvent.kt
+rename to src/main/kotlin/kr/eme/prcMission/api/events/MissionEvent.kt
+index 55f4635..e25f759 100644
+--- a/src/main/kotlin/kr/eme/semiMission/api/events/MissionEvent.kt
++++ b/src/main/kotlin/kr/eme/prcMission/api/events/MissionEvent.kt
+@@ -1,6 +1,6 @@
+-package kr.eme.semiMission.api.events
++package kr.eme.prcMission.api.events
+ 
+-import kr.eme.semiMission.enums.MissionVersion
++import kr.eme.prcMission.enums.MissionVersion
+ import org.bukkit.entity.Player
+ import org.bukkit.event.Event
+ import org.bukkit.event.HandlerList
+diff --git a/src/main/kotlin/kr/eme/semiMission/commands/MissionCommand.kt b/src/main/kotlin/kr/eme/prcMission/commands/MissionCommand.kt
+similarity index 93%
+rename from src/main/kotlin/kr/eme/semiMission/commands/MissionCommand.kt
+rename to src/main/kotlin/kr/eme/prcMission/commands/MissionCommand.kt
+index 37d4861..d1ef2df 100644
+--- a/src/main/kotlin/kr/eme/semiMission/commands/MissionCommand.kt
++++ b/src/main/kotlin/kr/eme/prcMission/commands/MissionCommand.kt
+@@ -1,11 +1,11 @@
+-package kr.eme.semiMission.commands
+-
+-import kr.eme.semiMission.enums.MissionVersion
+-import kr.eme.semiMission.managers.MissionManager
+-import kr.eme.semiMission.managers.MissionStateManager
+-import kr.eme.semiMission.objects.guis.MissionInitGUI
+-import kr.eme.semiMission.objects.items.ItemTemplates
+-import kr.eme.semiMission.objects.models.ItemReward
++package kr.eme.prcMission.commands
++
++import kr.eme.prcMission.enums.MissionVersion
++import kr.eme.prcMission.managers.MissionManager
++import kr.eme.prcMission.managers.MissionStateManager
++import kr.eme.prcMission.objects.guis.MissionInitGUI
++import kr.eme.prcMission.objects.items.ItemTemplates
++import kr.eme.prcMission.objects.models.ItemReward
+ import org.bukkit.command.Command
+ import org.bukkit.command.CommandSender
+ import org.bukkit.command.TabExecutor
+@@ -68,7 +68,7 @@ object MissionCommand : TabExecutor {
+ 
+         // 여기 추가: /mission testItem <아이템명> 자동완성
+         if (args.size == 2 && args[0].equals("testitem", ignoreCase = true)) {
+-            return kr.eme.semiMission.objects.items.ItemTemplates::class.memberProperties
++            return kr.eme.prcMission.objects.items.ItemTemplates::class.memberProperties
+                 .map { it.name }
+                 .filter { it.startsWith(args[1], ignoreCase = true) }
+                 .toMutableList()
+@@ -106,7 +106,7 @@ object MissionCommand : TabExecutor {
+             return true
+         }
+ 
+-        kr.eme.semiMission.objects.guis.MissionPageGUI(player, version, 1).apply {
++        kr.eme.prcMission.objects.guis.MissionPageGUI(player, version, 1).apply {
+             setFirstGUI(); open()
+         }
+         return true
+diff --git a/src/main/kotlin/kr/eme/semiMission/enums/MissionVersion.kt b/src/main/kotlin/kr/eme/prcMission/enums/MissionVersion.kt
+similarity index 71%
+rename from src/main/kotlin/kr/eme/semiMission/enums/MissionVersion.kt
+rename to src/main/kotlin/kr/eme/prcMission/enums/MissionVersion.kt
+index f3ac32a..0837817 100644
+--- a/src/main/kotlin/kr/eme/semiMission/enums/MissionVersion.kt
++++ b/src/main/kotlin/kr/eme/prcMission/enums/MissionVersion.kt
+@@ -1,4 +1,4 @@
+-package kr.eme.semiMission.enums
++package kr.eme.prcMission.enums
+ 
+ enum class MissionVersion {
+     V1,     //0.1 version
+diff --git a/src/main/kotlin/kr/eme/semiMission/listeners/GUIListener.kt b/src/main/kotlin/kr/eme/prcMission/listeners/GUIListener.kt
+similarity index 91%
+rename from src/main/kotlin/kr/eme/semiMission/listeners/GUIListener.kt
+rename to src/main/kotlin/kr/eme/prcMission/listeners/GUIListener.kt
+index 3e2542d..3f2008f 100644
+--- a/src/main/kotlin/kr/eme/semiMission/listeners/GUIListener.kt
++++ b/src/main/kotlin/kr/eme/prcMission/listeners/GUIListener.kt
+@@ -1,6 +1,6 @@
+-package kr.eme.semiMission.listeners
++package kr.eme.prcMission.listeners
+ 
+-import kr.eme.semiMission.managers.GUIManager
++import kr.eme.prcMission.managers.GUIManager
+ import org.bukkit.event.EventHandler
+ import org.bukkit.event.Listener
+ import org.bukkit.event.inventory.InventoryClickEvent
+diff --git a/src/main/kotlin/kr/eme/semiMission/listeners/MissionProgressListener.kt b/src/main/kotlin/kr/eme/prcMission/listeners/MissionProgressListener.kt
+similarity index 92%
+rename from src/main/kotlin/kr/eme/semiMission/listeners/MissionProgressListener.kt
+rename to src/main/kotlin/kr/eme/prcMission/listeners/MissionProgressListener.kt
+index 447ea56..d09c121 100644
+--- a/src/main/kotlin/kr/eme/semiMission/listeners/MissionProgressListener.kt
++++ b/src/main/kotlin/kr/eme/prcMission/listeners/MissionProgressListener.kt
+@@ -1,10 +1,10 @@
+-package kr.eme.semiMission.listeners
++package kr.eme.prcMission.listeners
+ 
+-import kr.eme.semiMission.api.events.MissionEvent
+-import kr.eme.semiMission.enums.MissionVersion
+-import kr.eme.semiMission.managers.MissionManager
+-import kr.eme.semiMission.managers.MissionStateManager
+-import kr.eme.semiMission.utils.SoundUtil
++import kr.eme.prcMission.api.events.MissionEvent
++import kr.eme.prcMission.enums.MissionVersion
++import kr.eme.prcMission.managers.MissionManager
++import kr.eme.prcMission.managers.MissionStateManager
++import kr.eme.prcMission.utils.SoundUtil
+ import org.bukkit.Bukkit
+ import org.bukkit.event.EventHandler
+ import org.bukkit.event.Listener
+diff --git a/src/main/kotlin/kr/eme/semiMission/managers/GUIManager.kt b/src/main/kotlin/kr/eme/prcMission/managers/GUIManager.kt
+similarity index 76%
+rename from src/main/kotlin/kr/eme/semiMission/managers/GUIManager.kt
+rename to src/main/kotlin/kr/eme/prcMission/managers/GUIManager.kt
+index 971db7f..23d9054 100644
+--- a/src/main/kotlin/kr/eme/semiMission/managers/GUIManager.kt
++++ b/src/main/kotlin/kr/eme/prcMission/managers/GUIManager.kt
+@@ -1,6 +1,6 @@
+-package kr.eme.semiMission.managers
++package kr.eme.prcMission.managers
+ 
+-import kr.eme.semiMission.objects.guis.GUI
++import kr.eme.prcMission.objects.guis.GUI
+ import java.util.UUID
+ 
+ object GUIManager {
+diff --git a/src/main/kotlin/kr/eme/semiMission/managers/MissionManager.kt b/src/main/kotlin/kr/eme/prcMission/managers/MissionManager.kt
+similarity index 72%
+rename from src/main/kotlin/kr/eme/semiMission/managers/MissionManager.kt
+rename to src/main/kotlin/kr/eme/prcMission/managers/MissionManager.kt
+index 2e5f116..910ec6a 100644
+--- a/src/main/kotlin/kr/eme/semiMission/managers/MissionManager.kt
++++ b/src/main/kotlin/kr/eme/prcMission/managers/MissionManager.kt
+@@ -1,9 +1,8 @@
+-package kr.eme.semiMission.managers
+-import kr.eme.semiMission.enums.MissionVersion
+-import kr.eme.semiMission.objects.missions.MissionsV1
+-import kr.eme.semiMission.objects.missions.MissionsV2
+-import kr.eme.semiMission.objects.models.Mission
+-import kotlin.collections.first
++package kr.eme.prcMission.managers
++import kr.eme.prcMission.enums.MissionVersion
++import kr.eme.prcMission.objects.missions.MissionsV1
++import kr.eme.prcMission.objects.missions.MissionsV2
++import kr.eme.prcMission.objects.models.Mission
+ import kotlin.collections.getOrNull
+ import kotlin.collections.indexOfFirst
+ import kotlin.collections.lastIndex
+diff --git a/src/main/kotlin/kr/eme/semiMission/managers/MissionStateManager.kt b/src/main/kotlin/kr/eme/prcMission/managers/MissionStateManager.kt
+similarity index 97%
+rename from src/main/kotlin/kr/eme/semiMission/managers/MissionStateManager.kt
+rename to src/main/kotlin/kr/eme/prcMission/managers/MissionStateManager.kt
+index 5ac1c65..1222acc 100644
+--- a/src/main/kotlin/kr/eme/semiMission/managers/MissionStateManager.kt
++++ b/src/main/kotlin/kr/eme/prcMission/managers/MissionStateManager.kt
+@@ -1,8 +1,8 @@
+-package kr.eme.semiMission.managers
++package kr.eme.prcMission.managers
+ 
+-import kr.eme.semiMission.enums.MissionVersion
+-import kr.eme.semiMission.objects.models.Mission
+-import kr.eme.semiMission.objects.models.MissionProgress
++import kr.eme.prcMission.enums.MissionVersion
++import kr.eme.prcMission.objects.models.Mission
++import kr.eme.prcMission.objects.models.MissionProgress
+ import org.bukkit.configuration.file.YamlConfiguration
+ import java.io.File
+ 
+diff --git a/src/main/kotlin/kr/eme/semiMission/managers/RewardManager.kt b/src/main/kotlin/kr/eme/prcMission/managers/RewardManager.kt
+similarity index 86%
+rename from src/main/kotlin/kr/eme/semiMission/managers/RewardManager.kt
+rename to src/main/kotlin/kr/eme/prcMission/managers/RewardManager.kt
+index 1352a40..8504282 100644
+--- a/src/main/kotlin/kr/eme/semiMission/managers/RewardManager.kt
++++ b/src/main/kotlin/kr/eme/prcMission/managers/RewardManager.kt
+@@ -1,9 +1,9 @@
+-package kr.eme.semiMission.managers
++package kr.eme.prcMission.managers
+ 
+-import kr.eme.semiMission.objects.models.ItemReward
+-import kr.eme.semiMission.objects.models.Mission
+-import kr.eme.semiMission.utils.ItemStackUtil
+-import kr.eme.semiMission.utils.SoundUtil
++import kr.eme.prcMission.objects.models.ItemReward
++import kr.eme.prcMission.objects.models.Mission
++import kr.eme.prcMission.utils.ItemStackUtil
++import kr.eme.prcMission.utils.SoundUtil
+ import kr.eme.semiMoneyGlobal.managers.MoneyManager
+ import org.bukkit.Bukkit
+ import org.bukkit.entity.Player
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/const/MissionStringV1.kt b/src/main/kotlin/kr/eme/prcMission/objects/const/MissionStringV1.kt
+similarity index 98%
+rename from src/main/kotlin/kr/eme/semiMission/objects/const/MissionStringV1.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/const/MissionStringV1.kt
+index 1b86ca5..fb928a4 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/const/MissionStringV1.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/const/MissionStringV1.kt
+@@ -1,4 +1,4 @@
+-package kr.eme.semiMission.objects.const
++package kr.eme.prcMission.objects.const
+ 
+ object MissionStringV1 {
+     const val m1_title = "기본 아이템 받기"
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/const/MissionStringV2.kt b/src/main/kotlin/kr/eme/prcMission/objects/const/MissionStringV2.kt
+similarity index 98%
+rename from src/main/kotlin/kr/eme/semiMission/objects/const/MissionStringV2.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/const/MissionStringV2.kt
+index 2d87c79..86b33b9 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/const/MissionStringV2.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/const/MissionStringV2.kt
+@@ -1,4 +1,4 @@
+-package kr.eme.semiMission.objects.const
++package kr.eme.prcMission.objects.const
+ 
+ object MissionStringV2 {
+     const val m1_title = "캡슐건 제작"
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/const/MissionTargets.kt b/src/main/kotlin/kr/eme/prcMission/objects/const/MissionTargets.kt
+similarity index 94%
+rename from src/main/kotlin/kr/eme/semiMission/objects/const/MissionTargets.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/const/MissionTargets.kt
+index 64e28f5..e5b9374 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/const/MissionTargets.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/const/MissionTargets.kt
+@@ -1,4 +1,4 @@
+-package kr.eme.semiMission.objects.const
++package kr.eme.prcMission.objects.const
+ 
+ object MissionTargets {
+     const val HOME_MODULE = "home_module"
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/const/MissionTypes.kt b/src/main/kotlin/kr/eme/prcMission/objects/const/MissionTypes.kt
+similarity index 90%
+rename from src/main/kotlin/kr/eme/semiMission/objects/const/MissionTypes.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/const/MissionTypes.kt
+index b38d1d6..587d941 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/const/MissionTypes.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/const/MissionTypes.kt
+@@ -1,4 +1,4 @@
+-package kr.eme.semiMission.objects.const
++package kr.eme.prcMission.objects.const
+ 
+ object MissionTypes {
+     const val DEVICE_INTERACTION = "DEVICE_INTERACTION"
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/guis/GUI.kt b/src/main/kotlin/kr/eme/prcMission/objects/guis/GUI.kt
+similarity index 96%
+rename from src/main/kotlin/kr/eme/semiMission/objects/guis/GUI.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/guis/GUI.kt
+index 96caa3d..78644af 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/guis/GUI.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/guis/GUI.kt
+@@ -1,6 +1,6 @@
+-package kr.eme.semiMission.objects.guis
++package kr.eme.prcMission.objects.guis
+ 
+-import kr.eme.semiMission.managers.GUIManager
++import kr.eme.prcMission.managers.GUIManager
+ import org.bukkit.Bukkit
+ import org.bukkit.entity.Player
+ import org.bukkit.event.inventory.InventoryClickEvent
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/guis/MissionInitGUI.kt b/src/main/kotlin/kr/eme/prcMission/objects/guis/MissionInitGUI.kt
+similarity index 94%
+rename from src/main/kotlin/kr/eme/semiMission/objects/guis/MissionInitGUI.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/guis/MissionInitGUI.kt
+index 24f5be3..081faf8 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/guis/MissionInitGUI.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/guis/MissionInitGUI.kt
+@@ -1,8 +1,8 @@
+-package kr.eme.semiMission.objects.guis
++package kr.eme.prcMission.objects.guis
+ 
+-import kr.eme.semiMission.enums.MissionVersion
+-import kr.eme.semiMission.utils.ItemStackUtil
+-import kr.eme.semiMission.utils.SoundUtil
++import kr.eme.prcMission.enums.MissionVersion
++import kr.eme.prcMission.utils.ItemStackUtil
++import kr.eme.prcMission.utils.SoundUtil
+ import kr.eme.semiTradeShop.managers.GUIManager
+ import kr.eme.semiTradeShop.objects.guis.InitShopGUI
+ import org.bukkit.Material
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/guis/MissionPageGUI.kt b/src/main/kotlin/kr/eme/prcMission/objects/guis/MissionPageGUI.kt
+similarity index 97%
+rename from src/main/kotlin/kr/eme/semiMission/objects/guis/MissionPageGUI.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/guis/MissionPageGUI.kt
+index c91254c..1183d47 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/guis/MissionPageGUI.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/guis/MissionPageGUI.kt
+@@ -1,11 +1,11 @@
+-package kr.eme.semiMission.objects.guis
+-
+-import kr.eme.semiMission.enums.MissionVersion
+-import kr.eme.semiMission.managers.MissionManager
+-import kr.eme.semiMission.managers.MissionStateManager
+-import kr.eme.semiMission.managers.RewardManager
+-import kr.eme.semiMission.utils.ItemStackUtil
+-import kr.eme.semiMission.utils.SoundUtil
++package kr.eme.prcMission.objects.guis
++
++import kr.eme.prcMission.enums.MissionVersion
++import kr.eme.prcMission.managers.MissionManager
++import kr.eme.prcMission.managers.MissionStateManager
++import kr.eme.prcMission.managers.RewardManager
++import kr.eme.prcMission.utils.ItemStackUtil
++import kr.eme.prcMission.utils.SoundUtil
+ import org.bukkit.entity.Player
+ import org.bukkit.event.inventory.InventoryClickEvent
+ import org.bukkit.event.inventory.InventoryCloseEvent
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/items/ItemTemplates.kt b/src/main/kotlin/kr/eme/prcMission/objects/items/ItemTemplates.kt
+similarity index 94%
+rename from src/main/kotlin/kr/eme/semiMission/objects/items/ItemTemplates.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/items/ItemTemplates.kt
+index 83d8ab7..8eae882 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/items/ItemTemplates.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/items/ItemTemplates.kt
+@@ -1,14 +1,14 @@
+-package kr.eme.semiMission.objects.items
++package kr.eme.prcMission.objects.items
+ 
+ 
+ 
+-import kr.eme.semiMission.objects.models.ItemReward as IR
++import kr.eme.prcMission.objects.models.ItemReward as IR
+ import org.bukkit.Material as M
+ import org.bukkit.NamespacedKey
+ import org.bukkit.attribute.Attribute
+ import org.bukkit.attribute.AttributeModifier
+ import org.bukkit.inventory.EquipmentSlotGroup
+-import kr.eme.semiMission.main
++import kr.eme.prcMission.main
+ 
+ object ItemTemplates {
+     // material
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/missions/MissionsV1.kt b/src/main/kotlin/kr/eme/prcMission/objects/missions/MissionsV1.kt
+similarity index 92%
+rename from src/main/kotlin/kr/eme/semiMission/objects/missions/MissionsV1.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/missions/MissionsV1.kt
+index d0cdfad..dedfffc 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/missions/MissionsV1.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/missions/MissionsV1.kt
+@@ -1,9 +1,9 @@
+-package kr.eme.semiMission.objects.missions
++package kr.eme.prcMission.objects.missions
+ 
+-import kr.eme.semiMission.objects.models.Mission
+-import kr.eme.semiMission.objects.const.MissionStringV1 as MS
+-import kr.eme.semiMission.objects.missions.conditionPresets.ConditionPresetV1 as CP
+-import kr.eme.semiMission.objects.missions.rewardPresets.RewardPresetV1 as RP
++import kr.eme.prcMission.objects.models.Mission
++import kr.eme.prcMission.objects.const.MissionStringV1 as MS
++import kr.eme.prcMission.objects.missions.conditionPresets.ConditionPresetV1 as CP
++import kr.eme.prcMission.objects.missions.rewardPresets.RewardPresetV1 as RP
+ 
+ 
+ object MissionsV1 {
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/missions/MissionsV2.kt b/src/main/kotlin/kr/eme/prcMission/objects/missions/MissionsV2.kt
+similarity index 92%
+rename from src/main/kotlin/kr/eme/semiMission/objects/missions/MissionsV2.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/missions/MissionsV2.kt
+index 38b5566..0cdc97c 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/missions/MissionsV2.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/missions/MissionsV2.kt
+@@ -1,9 +1,9 @@
+-package kr.eme.semiMission.objects.missions
++package kr.eme.prcMission.objects.missions
+ 
+-import kr.eme.semiMission.objects.models.Mission
+-import kr.eme.semiMission.objects.const.MissionStringV2 as MS
+-import kr.eme.semiMission.objects.missions.conditionPresets.ConditionPresetV2 as CP
+-import kr.eme.semiMission.objects.missions.rewardPresets.RewardPresetV2 as RP
++import kr.eme.prcMission.objects.models.Mission
++import kr.eme.prcMission.objects.const.MissionStringV2 as MS
++import kr.eme.prcMission.objects.missions.conditionPresets.ConditionPresetV2 as CP
++import kr.eme.prcMission.objects.missions.rewardPresets.RewardPresetV2 as RP
+ 
+ 
+ object MissionsV2 {
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/missions/conditionPresets/ConditionPresetV1.kt b/src/main/kotlin/kr/eme/prcMission/objects/missions/conditionPresets/ConditionPresetV1.kt
+similarity index 87%
+rename from src/main/kotlin/kr/eme/semiMission/objects/missions/conditionPresets/ConditionPresetV1.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/missions/conditionPresets/ConditionPresetV1.kt
+index 60071a7..dd86aa9 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/missions/conditionPresets/ConditionPresetV1.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/missions/conditionPresets/ConditionPresetV1.kt
+@@ -1,8 +1,8 @@
+-package kr.eme.semiMission.objects.missions.conditionPresets
++package kr.eme.prcMission.objects.missions.conditionPresets
+ 
+-import kr.eme.semiMission.objects.const.MissionTargets as MTA
+-import kr.eme.semiMission.objects.const.MissionTypes as MT
+-import kr.eme.semiMission.objects.models.Condition as C
++import kr.eme.prcMission.objects.const.MissionTargets as MTA
++import kr.eme.prcMission.objects.const.MissionTypes as MT
++import kr.eme.prcMission.objects.models.Condition as C
+ 
+ object ConditionPresetV1 {
+     val m1_cond = C(MT.DEVICE_INTERACTION, MTA.HOME_MODULE, listOf(1))
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/missions/conditionPresets/ConditionPresetV2.kt b/src/main/kotlin/kr/eme/prcMission/objects/missions/conditionPresets/ConditionPresetV2.kt
+similarity index 85%
+rename from src/main/kotlin/kr/eme/semiMission/objects/missions/conditionPresets/ConditionPresetV2.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/missions/conditionPresets/ConditionPresetV2.kt
+index 653e956..dd87651 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/missions/conditionPresets/ConditionPresetV2.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/missions/conditionPresets/ConditionPresetV2.kt
+@@ -1,8 +1,8 @@
+-package kr.eme.semiMission.objects.missions.conditionPresets
++package kr.eme.prcMission.objects.missions.conditionPresets
+ 
+-import kr.eme.semiMission.objects.const.MissionTargets as MTA
+-import kr.eme.semiMission.objects.const.MissionTypes as MT
+-import kr.eme.semiMission.objects.models.Condition as C
++import kr.eme.prcMission.objects.const.MissionTargets as MTA
++import kr.eme.prcMission.objects.const.MissionTypes as MT
++import kr.eme.prcMission.objects.models.Condition as C
+ 
+ object ConditionPresetV2 {
+     val m1_cond = C(MT.CRAFTING,MTA.CRAFTING,listOf(1))
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/missions/rewardPresets/RewardPresetV1.kt b/src/main/kotlin/kr/eme/prcMission/objects/missions/rewardPresets/RewardPresetV1.kt
+similarity index 91%
+rename from src/main/kotlin/kr/eme/semiMission/objects/missions/rewardPresets/RewardPresetV1.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/missions/rewardPresets/RewardPresetV1.kt
+index f3b1888..244ee3d 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/missions/rewardPresets/RewardPresetV1.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/missions/rewardPresets/RewardPresetV1.kt
+@@ -1,7 +1,7 @@
+-package kr.eme.semiMission.objects.missions.rewardPresets
++package kr.eme.prcMission.objects.missions.rewardPresets
+ 
+-import kr.eme.semiMission.objects.models.Reward
+-import kr.eme.semiMission.objects.items.ItemTemplates as IT
++import kr.eme.prcMission.objects.models.Reward
++import kr.eme.prcMission.objects.items.ItemTemplates as IT
+ 
+ object RewardPresetV1 {
+     val m1_reward = Reward(
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/missions/rewardPresets/RewardPresetV2.kt b/src/main/kotlin/kr/eme/prcMission/objects/missions/rewardPresets/RewardPresetV2.kt
+similarity index 93%
+rename from src/main/kotlin/kr/eme/semiMission/objects/missions/rewardPresets/RewardPresetV2.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/missions/rewardPresets/RewardPresetV2.kt
+index 1de35ea..77cd08c 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/missions/rewardPresets/RewardPresetV2.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/missions/rewardPresets/RewardPresetV2.kt
+@@ -1,7 +1,7 @@
+-package kr.eme.semiMission.objects.missions.rewardPresets
++package kr.eme.prcMission.objects.missions.rewardPresets
+ 
+-import kr.eme.semiMission.objects.models.Reward
+-import kr.eme.semiMission.objects.items.ItemTemplates as IT
++import kr.eme.prcMission.objects.models.Reward
++import kr.eme.prcMission.objects.items.ItemTemplates as IT
+ 
+ object RewardPresetV2 {
+     val m1_reward = Reward(
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/models/Condition.kt b/src/main/kotlin/kr/eme/prcMission/objects/models/Condition.kt
+similarity index 84%
+rename from src/main/kotlin/kr/eme/semiMission/objects/models/Condition.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/models/Condition.kt
+index 8bd8314..f7042da 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/models/Condition.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/models/Condition.kt
+@@ -1,4 +1,4 @@
+-package kr.eme.semiMission.objects.models
++package kr.eme.prcMission.objects.models
+ 
+ data class Condition(
+     val type: String,
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/models/ItemReward.kt b/src/main/kotlin/kr/eme/prcMission/objects/models/ItemReward.kt
+similarity index 96%
+rename from src/main/kotlin/kr/eme/semiMission/objects/models/ItemReward.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/models/ItemReward.kt
+index 3d2cc5e..a25e362 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/models/ItemReward.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/models/ItemReward.kt
+@@ -1,4 +1,4 @@
+-package kr.eme.semiMission.objects.models
++package kr.eme.prcMission.objects.models
+ 
+ import net.kyori.adventure.text.Component
+ import org.bukkit.Material
+@@ -9,7 +9,7 @@ import org.bukkit.attribute.Attribute
+ import org.bukkit.attribute.AttributeModifier
+ import org.bukkit.NamespacedKey
+ import org.bukkit.inventory.EquipmentSlotGroup
+-import kr.eme.semiMission.main
++import kr.eme.prcMission.main
+ 
+ data class ItemReward(
+     val material: Material,
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/models/Mission.kt b/src/main/kotlin/kr/eme/prcMission/objects/models/Mission.kt
+similarity index 81%
+rename from src/main/kotlin/kr/eme/semiMission/objects/models/Mission.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/models/Mission.kt
+index 60137a4..130f3b5 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/models/Mission.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/models/Mission.kt
+@@ -1,4 +1,4 @@
+-package kr.eme.semiMission.objects.models
++package kr.eme.prcMission.objects.models
+ 
+ data class Mission(
+     val id: Int,
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/models/MissionProgress.kt b/src/main/kotlin/kr/eme/prcMission/objects/models/MissionProgress.kt
+similarity index 81%
+rename from src/main/kotlin/kr/eme/semiMission/objects/models/MissionProgress.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/models/MissionProgress.kt
+index fa8f78b..6bbbda9 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/models/MissionProgress.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/models/MissionProgress.kt
+@@ -1,4 +1,4 @@
+-package kr.eme.semiMission.objects.models
++package kr.eme.prcMission.objects.models
+ 
+ data class MissionProgress(
+     val missionID: String,
+diff --git a/src/main/kotlin/kr/eme/semiMission/objects/models/Reward.kt b/src/main/kotlin/kr/eme/prcMission/objects/models/Reward.kt
+similarity index 67%
+rename from src/main/kotlin/kr/eme/semiMission/objects/models/Reward.kt
+rename to src/main/kotlin/kr/eme/prcMission/objects/models/Reward.kt
+index 6e4229a..4f01b04 100644
+--- a/src/main/kotlin/kr/eme/semiMission/objects/models/Reward.kt
++++ b/src/main/kotlin/kr/eme/prcMission/objects/models/Reward.kt
+@@ -1,4 +1,4 @@
+-package kr.eme.semiMission.objects.models
++package kr.eme.prcMission.objects.models
+ 
+ data class Reward(
+     val ep: Int = 0,
+diff --git a/src/main/kotlin/kr/eme/semiMission/utils/ItemStackUtil.kt b/src/main/kotlin/kr/eme/prcMission/utils/ItemStackUtil.kt
+similarity index 95%
+rename from src/main/kotlin/kr/eme/semiMission/utils/ItemStackUtil.kt
+rename to src/main/kotlin/kr/eme/prcMission/utils/ItemStackUtil.kt
+index 7d13b69..0a3a8b2 100644
+--- a/src/main/kotlin/kr/eme/semiMission/utils/ItemStackUtil.kt
++++ b/src/main/kotlin/kr/eme/prcMission/utils/ItemStackUtil.kt
+@@ -1,8 +1,6 @@
+-package kr.eme.semiMission.utils
++package kr.eme.prcMission.utils
+ 
+-import com.sun.beans.introspect.PropertyInfo
+-import kr.eme.semiMission.enums.MissionVersion
+-import kr.eme.semiMission.objects.models.Mission
++import kr.eme.prcMission.enums.MissionVersion
+ import org.bukkit.Material
+ import org.bukkit.inventory.ItemStack
+ import org.bukkit.inventory.meta.ItemMeta
+diff --git a/src/main/kotlin/kr/eme/semiMission/utils/SoundUtil.kt b/src/main/kotlin/kr/eme/prcMission/utils/SoundUtil.kt
+similarity index 94%
+rename from src/main/kotlin/kr/eme/semiMission/utils/SoundUtil.kt
+rename to src/main/kotlin/kr/eme/prcMission/utils/SoundUtil.kt
+index 557014b..eadd907 100644
+--- a/src/main/kotlin/kr/eme/semiMission/utils/SoundUtil.kt
++++ b/src/main/kotlin/kr/eme/prcMission/utils/SoundUtil.kt
+@@ -1,4 +1,4 @@
+-package kr.eme.semiMission.utils
++package kr.eme.prcMission.utils
+ 
+ import org.bukkit.Sound
+ import org.bukkit.entity.Player
+diff --git a/src/main/resources/plugin.yml b/src/main/resources/plugin.yml
+index 0ec36d9..c408e05 100644
+--- a/src/main/resources/plugin.yml
++++ b/src/main/resources/plugin.yml
+@@ -1,9 +1,9 @@
+-name: SemiMission
+-main: kr.eme.semiMission.SemiMission
++name: PRCMission
++main: kr.eme.prcMission.PRCMission
+ version: 1.0
+ api-version: 1.21
+ depend:
+-  - SemiMoneyGlobal
++  - PRCMoney
+ commands:
+   mission:
+     usage: /mission or /미션

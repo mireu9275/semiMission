@@ -4,7 +4,7 @@ import kr.eme.prcMission.objects.models.ItemReward
 import kr.eme.prcMission.objects.models.Mission
 import kr.eme.prcMission.utils.ItemStackUtil
 import kr.eme.prcMission.utils.SoundUtil
-import kr.eme.semiMoneyGlobal.managers.MoneyManager
+import kr.eme.prcMoney.managers.MoneyManager
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
