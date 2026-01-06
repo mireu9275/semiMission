@@ -3,7 +3,7 @@ plugins {
     `maven-publish`
 }
 
-group = "kr.eme.semiMission"
+group = "kr.eme.prcMission"
 version = "1.0.5"
 
 repositories {
@@ -34,7 +34,7 @@ tasks.jar {
     //destinationDirectory = file("C:\\Users\\mireu\\Desktop\\Minecraft\\Bukkit\\paper 1.21.4 (Semicolon Primary Colony)\\plugins") // Notebook
     destinationDirectory = file("C:\\Users\\Home\\Desktop\\Develop\\minecraft\\Bukkit\\paper 1.21.4 (Semicolon Primary Colony)\\plugins") // Computer
     manifest {
-        attributes["Main-Class" ] = "kr.eme.semiMission.SemiMission"
+        attributes["Main-Class" ] = "kr.eme.prcMission.PRCMission"
     }
 }
 
@@ -43,7 +43,7 @@ publishing {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
             groupId = project.group.toString()      // ✅ group = "kr.eme.semiMission"
-            artifactId = "SemiMission"              // ✅ artifactId
+            artifactId = "PRCMission"              // ✅ artifactId
             version = project.version.toString()    // ✅ version = "1.0.0"
         }
     }

@@ -1,9 +1,9 @@
-name: SemiMission
-main: kr.eme.semiMission.SemiMission
+name: PRCMission
+main: kr.eme.prcMission.PRCMission
 version: 1.0
 api-version: 1.21
 depend:
-  - SemiMoneyGlobal
+  - PRCMoney
 commands:
   mission:
     usage: /mission or /미션
