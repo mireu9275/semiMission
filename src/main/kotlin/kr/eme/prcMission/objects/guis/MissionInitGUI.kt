@@ -3,8 +3,8 @@ package kr.eme.prcMission.objects.guis
 import kr.eme.prcMission.enums.MissionVersion
 import kr.eme.prcMission.utils.ItemStackUtil
 import kr.eme.prcMission.utils.SoundUtil
-import kr.eme.semiTradeShop.managers.GUIManager
-import kr.eme.semiTradeShop.objects.guis.InitShopGUI
+import kr.eme.prcShop.managers.GUIManager
+import kr.eme.prcShop.objects.guis.InitShopGUI
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent

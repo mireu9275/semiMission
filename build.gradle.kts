@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "kr.eme.prcMission"
-version = "1.0.6"
+version = "1.0.7"
 
 repositories {
     mavenLocal()
@@ -16,7 +16,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("com.github.mireu9275:PRCMoney:v1.0.2")
-    compileOnly("com.github.mireu9275:SemiTradeShop:v1.0.5")
+    compileOnly("com.github.mireu9275:PRCShop:v1.0.7")
     compileOnly(kotlin("stdlib"))
     compileOnly(kotlin("reflect"))
 }
